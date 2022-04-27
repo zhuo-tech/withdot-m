@@ -1,4 +1,4 @@
-import { cloud } from './cloud'
+import { cloud } from '@/config/cloud'
 
 interface UploadResult {
   _id: string

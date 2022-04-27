@@ -2,7 +2,7 @@
  * App android 热更新，需要在后端实现 'app-hot-update' 云函数
  */
 
-import { cloud } from './cloud'
+import { cloud } from '@/config/cloud'
 
 export function checkAndUpdateApp() {
   // #ifdef APP-PLUS

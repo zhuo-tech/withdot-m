@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../config'
+import { API_BASE_URL } from '@/config/config'
 import { clearUserInfo, getToken } from '.'
 import { ApiResponseType } from '@/types'
 import { showError } from './show'

@@ -1,6 +1,6 @@
 import { Notify } from 'vant'
 import { ref } from 'vue'
-import { getAlbumListApi } from '../../../api/home/index'
+import { getAlbumListApi } from '@/api/home/index'
 
 export function indexService() {
     //绑定搜索框
@@ -10,7 +10,7 @@ export function indexService() {
         getAlbumListApi().then(response=>{
             console.log(response)
         }).catch(err => {
-            Notify({ type: 'danger', message: err });
+            Notify({type: 'danger', message: err.toString()})
         })
 
     }
