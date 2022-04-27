@@ -7,8 +7,9 @@ export async function getAlbumListApi(){
         })
         .orderBy('updateTime', 'desc')
         .get()
+    console.log(albumRes)
     if(!albumRes.ok){
         throw new Error(albumRes.error)
     }
-    return albumRes.data
+    return albumRes
 }
