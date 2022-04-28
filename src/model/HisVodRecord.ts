@@ -5,7 +5,9 @@
  */
 export class HisVodRecord {
 
-    _id: string;
+    public static readonly TABLE_NAME = 'his_vod_record'
+
+    _id: string
 
     /**
      * 当前登陆人
