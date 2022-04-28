@@ -9,6 +9,8 @@ const props = defineProps<{
 
 const formData: Record<number, any> = {}
 
+const emits = defineEmits(['videoStop'])
+
 props.data.config.exam.forEach((item: any, index: number) => {
   switch (item.type) {
     case QuestionTypeEnum.SAQ:
@@ -56,6 +58,15 @@ const uponQuestion = () => {
   }
 }
 
+const judgmentDot = () => {
+  console.log(props.data.config, '打点参数')
+  const palay = props.data.config.pause
+  if (palay) {
+    emits('videoStop')
+  }
+}
+
+judgmentDot()
 const form = reactive(formData)
 </script>
 
@@ -63,7 +74,7 @@ const form = reactive(formData)
   <van-overlay :show="true" />
   <view class="box" @click.stop="()=>{}">
     <van-form ref="formRef" :model="form" label-width="40px">
-      <view v-for="(item,index) in data.config.exam" v-show="currentQuestion === index" :key="index">
+      <view v-for="(item,index) in data.config.exam" v-show="currentQuestion === index" :key="index" style="min-height: 30vh">
         <view class="questionIndex">
           <view>{{ index + 1 }}</view>
           /
@@ -114,6 +125,10 @@ const form = reactive(formData)
 </template>
 
 <style lang="less" scoped>
+.van-field {
+  padding-left: 30rpx;
+}
+
 .questionIndex {
   display: flex;
   flex-direction: row;
@@ -146,10 +161,14 @@ const form = reactive(formData)
   pointer-events: auto;
   border-radius: 30rpx;
   z-index: 100;
+  min-height: 40vh;
 }
 
 .question {
   margin: 0 30rpx;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-line;
   color: rgba(47, 63, 90, 1)
 }
 

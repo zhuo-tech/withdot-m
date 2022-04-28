@@ -12,6 +12,7 @@ export default defineComponent({
         data: Object,
         videoScreen: Boolean,
     },
+    emits: ['videoStop'],
     render() {
         const type = this.$props.data?.type
         const sereen = this.$props.videoScreen
@@ -33,7 +34,7 @@ export default defineComponent({
         }
 
         // @ts-ignore
-        return <Show data={ this.$props.data } ondblclick={ (event) => this.doubleClick(event) } class="display-expanded"></Show>
+        return <Show data={ this.$props.data } onVideoStop={ () => this.$emit('videoStop') } class="display-expanded"></Show>
     },
 })
 

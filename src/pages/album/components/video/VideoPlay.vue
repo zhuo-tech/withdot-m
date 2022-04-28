@@ -2,6 +2,10 @@
   <view class="box">
     <!--video原视频容器-->
     <video id="myVideo"
+           :controls="videoButton"
+           :show-center-play-btn="videoButton"
+           :show-fullscreen-btn="videoButton"
+           autoplay
            :src="videoAddress(videoData.materialData?.href)"
            @fullscreenchange="videoFullScreen"
            @timeupdate="currentTime">
@@ -9,7 +13,7 @@
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
           <view v-for="(item,index) in currentDot" :key="index">
             <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
-              <Dot :data="item" :videoScreen="videoScreen" />
+              <Dot :data="item" :videoScreen="videoScreen" @videoStop="vieoStop" />
             </teleport>
           </view>
         </view>
@@ -33,6 +37,9 @@ const props = defineProps({
     type: String,
   },
 })
+
+//视频控件(是否显示默认播放控件（播放/暂停按钮、播放进度、时间）,是否显示全屏按钮.是否显示视频中间的播放按钮)
+const videoButton = ref(true)
 
 //绑定video是否全屏
 const videoScreen = ref(false)
@@ -77,6 +84,31 @@ const videoFullScreen = () => {
 const currentTime = (event: any) => {
   const {currentTime} = event.detail
   currentDot.value = dotDate.value.filter(({start, end}) => currentTime >= start && currentTime <= (end ?? start))
+}
+
+/**
+ * 视频停止播放
+ */
+const vieoStop = () => {
+  videoContext.pause()
+}
+
+/**
+ * 视频开始播放
+ */
+const videoPlay = () => {
+  videoContext.play()
+}
+
+/**
+ * 视频禁用操作
+ */
+const videoDisableOperation = () => {
+  videoButton.value = false
+}
+
+const startVideoBUtton = () => {
+  videoButton.value = true
 }
 
 /**
