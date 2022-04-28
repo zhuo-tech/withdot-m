@@ -4,7 +4,7 @@
         <van-cell-group inset style="border-radius: 100rpx">
             <van-field v-model="indexService.searchValue" left-icon="search" placeholder="搜索" />
         </van-cell-group>
-        <image mode="aspectFill" src="../../static/树.png"></image>
+      <image mode="aspectFill" src="../../static/树.png"></image>
     </view>
     <view class="content">
         <view class="album">

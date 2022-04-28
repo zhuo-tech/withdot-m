@@ -13,7 +13,7 @@ export function VideoFun() {
      * @param {string} workId  作品_id
      * @returns {Promise<CoreWork[]>}
      */
-    const getVideoFun = async (workId: string = '6253b86129ef3d8dd5669c79') => {
+    const getVideoFun = async (workId: string) => {
         return await cloud.invokeFunction('app-video-data', {workId})
     }
 

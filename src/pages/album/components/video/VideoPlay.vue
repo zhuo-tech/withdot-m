@@ -3,7 +3,7 @@
     <!--video原视频容器-->
     <video id="myVideo" :src="videoAddress(videoData.materialData?.href)" @timeupdate="currentTime" />
     <view class="cover">
-      <Dot v-for="(item,index) in currentDot" :key="index" :data="item"  />
+      <Dot v-for="(item,index) in currentDot" :key="index" :data="item" />
     </view>
   </view>
 </template>
@@ -13,8 +13,14 @@ import Dot from '../Dot'
 import { CoreDot } from '@/model/entity/CoreDot'
 import { videoAddress } from '@/utils/video'
 import { Notify } from 'vant'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { VideoDataType, VideoFun } from '@/api/album/videoApi'
+
+const props = defineProps({
+  workId: {
+    type: String,
+  },
+})
 
 let videoData = ref<VideoDataType>({} as VideoDataType)
 
@@ -28,10 +34,10 @@ const currentDot = ref<CoreDot[]>([])
  * @returns {Promise<void>}
  */
 const getVideoData = async () => {
-  await VideoFun().getVideoFun('6253b86129ef3d8dd5669c79').then((response:any) => {
+  await VideoFun().getVideoFun(props.workId as string).then((response: any) => {
     videoData.value = response
     dotDate.value = response.dotData
-  }).catch((err:any) => {
+  }).catch((err: any) => {
     Notify({type: 'danger', message: err.toString()})
   })
 }
@@ -41,7 +47,10 @@ const currentTime = (event: any) => {
   currentDot.value = dotDate.value.filter(({start, end}) => currentTime >= start && currentTime <= (end ?? start))
 }
 
-getVideoData()
+watch(() => props.workId, () => {
+  getVideoData()
+})
+
 </script>
 
 <style lang="less" scoped>
