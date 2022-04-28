@@ -1,153 +1,161 @@
 <script lang="ts" setup>
-import { CoreDotType, DotTypeConfigMapping } from '@/model/entity/CoreDot'
-import { ElMessage, FormInstance } from 'element-plus'
+import { CoreDot } from '@/model/entity/CoreDot'
 import { reactive, ref } from 'vue'
 import { QuestionTypeEnum } from '@/model/QuestionTypeEnum'
 
 const props = defineProps<{
-    data: DotTypeConfigMapping[CoreDotType.题目]
+  data: CoreDot
 }>()
 
 const formData: Record<number, any> = {}
 
-props.data.exam.forEach((item, index) => {
-    switch (item.type) {
-        case QuestionTypeEnum.SAQ:
-            formData[index] = {
-                type: item.type,
-                currentAnswer: '',
-            }
-            break
-        case QuestionTypeEnum.XUANZE:
-            let options: Record<number, any> = {}
-            item.content.forEach((item: any, index: number) => {
-                options[index] = false
-            })
-            formData[index] = {
-                type: item.type,
-                currentAnswer: options,
-            }
-            break
-        case QuestionTypeEnum.TIANKONG:
-            let blank: Record<number, any> = {}
-            item.content.forEach((item: any, index: number) => {
-                blank[index] = ''
-            })
-            formData[index] = {
-                type: item.type,
-                currentAnswer: blank,
-            }
-            break
-        default:
-            formData[index] = {type: 'default'}
-    }
+props.data.config.exam.forEach((item: any, index: number) => {
+  switch (item.type) {
+    case QuestionTypeEnum.SAQ:
+      formData[index] = {
+        type: item.type,
+        currentAnswer: '',
+      }
+      break
+    case QuestionTypeEnum.XUANZE:
+      let options: Record<number, any> = {}
+      item.content.forEach((item: any, index: number) => {
+        options[index] = false
+      })
+      formData[index] = {
+        type: item.type,
+        currentAnswer: options,
+      }
+      break
+    case QuestionTypeEnum.TIANKONG:
+      let blank: Record<number, any> = {}
+      item.content.forEach((item: any, index: number) => {
+        blank[index] = ''
+      })
+      formData[index] = {
+        type: item.type,
+        currentAnswer: blank,
+      }
+      break
+    default:
+      formData[index] = {type: 'default'}
+  }
 })
 
 const currentQuestion = ref(0)
 
 const nextQuestion = () => {
-    if (props.data.exam.length >= (currentQuestion.value + 1)) {
-        currentQuestion.value++
-    }
+  if (props.data.config.exam.length >= (currentQuestion.value + 1)) {
+    currentQuestion.value++
+  }
 }
 
 const uponQuestion = () => {
-    if (currentQuestion.value > 0) {
-        currentQuestion.value--
-    }
+  if (currentQuestion.value > 0) {
+    currentQuestion.value--
+  }
 }
 
 const form = reactive(formData)
 </script>
 
 <template>
-    <div class="box" @click.stop="()=>{}">
-        <div class="boxTop">
-            <div v-for="(item,index) in data.exam" :class="index>currentQuestion? 'noAnswer':'alreadyAnswer'">第{{ index + 1 }}题</div>
-        </div>
-        <el-form ref="formRef" :model="form" label-width="80px">
-            <div v-for="(item,index) in data.exam" v-show="currentQuestion === index" :key=index>
-                <div v-if="item.type === QuestionTypeEnum.SAQ">
-                    <el-form-item label="题目">
-                        <div>{{ item.label }}</div>
-                    </el-form-item>
-                    <el-form-item label="答案">
-                        <el-input v-model="form[index].currentAnswer" type="textarea"></el-input>
-                    </el-form-item>
-                </div>
-                <div v-if="item.type === QuestionTypeEnum.TIANKONG">
-                    <el-form-item label="题目">
-                        <div>{{ item.label }}</div>
-                    </el-form-item>
-                    <el-form-item v-for="(i,ind) in item.content" :key="ind" label="答案">
-                        <el-input v-model="form[index].currentAnswer[ind]" style="width: 100px"></el-input>
-                    </el-form-item>
-                </div>
-                <div v-if="item.type === QuestionTypeEnum.XUANZE">
-                    <el-form-item label="题目">
-                        <div>{{ item.label }}</div>
-                    </el-form-item>
-                    <el-form-item v-for="(i,ind) in item.content" :key="ind" label="答案">
-                        <el-checkbox v-model="form[index].currentAnswer[ind]" :label="true" name="type" size="large">{{ i.answer }}</el-checkbox>
-                    </el-form-item>
-                </div>
-            </div>
-            <el-row justify="end" type="flex">
-                <div v-if="(currentQuestion+1) !== data.exam.length">
-                    <el-button v-if="currentQuestion !== 0"
-                               style="margin: 0 20px 20px 0"
-                               type="primary"
-                               @click="uponQuestion">上一题
-                    </el-button>
-                    <el-button style="margin: 0 20px 20px 0"
-                               type="primary"
-                               @click="nextQuestion">下一题
-                    </el-button>
-                </div>
-                <div v-else>
-                    <el-button v-if="currentQuestion !== 0"
-                               style="margin: 0 20px 20px 0"
-                               type="primary"
-                               @click="uponQuestion">上一题
-                    </el-button>
-                    <el-button style="margin: 0 20px 20px 0" type="primary">提交</el-button>
-                </div>
+  <van-overlay :show="true" />
+  <view class="box" @click.stop="()=>{}">
+    <van-form ref="formRef" :model="form" label-width="40px">
+      <view v-for="(item,index) in data.config.exam" v-show="currentQuestion === index" :key="index">
+        <view class="questionIndex">
+          <view>{{ index + 1 }}</view>
+          /
+          <view>{{ data.config.exam.length }}</view>
+        </view>
+        <view v-if="item.type === QuestionTypeEnum.SAQ">
+          <view class="question">{{ item.label }}</view>
+          <van-field v-model="form[index].currentAnswer" label="答案" type=""></van-field>
+        </view>
+        <view v-if="item.type === QuestionTypeEnum.TIANKONG">
+          <view class="question">{{ item.label }}</view>
+          <van-field v-for="(i,ind) in item.content" :key="ind" v-model="form[index].currentAnswer[ind]" label="答案"></van-field>
+        </view>
+        <view v-if="item.type === QuestionTypeEnum.XUANZE">
+          <view class="question">{{ item.label }}</view>
+          <van-field v-for="(i,ind) in item.content" :key="ind" label="答案" name="checkBox">
+            <template #input>
+              <van-checkbox v-model="form[index].currentAnswer[ind]">{{ i.answer }}</van-checkbox>
+            </template>
+          </van-field>
+        </view>
+      </view>
+      <van-row justify="end" type="flex">
+        <view v-if="(currentQuestion+1) !== data.config.exam.length">
+          <van-button v-if="currentQuestion !== 0"
+                      class="button"
+                      type="primary"
+                      @click="uponQuestion">上一题
+          </van-button>
+          <van-button class="button"
+                      type="primary"
+                      @click="nextQuestion">下一题
+          </van-button>
+        </view>
+        <view v-else>
+          <van-button v-if="currentQuestion !== 0"
+                      class="button"
+                      type="primary"
+                      @click="uponQuestion">上一题
+          </van-button>
+          <van-button class="button" type="primary">提交</van-button>
+        </view>
 
-            </el-row>
+      </van-row>
 
-        </el-form>
-    </div>
+    </van-form>
+  </view>
 </template>
 
 <style lang="less" scoped>
-.boxTop {
-    display: flex;
-    justify-content: space-evenly;
-    margin-bottom: 20px;
-    margin-top: 20px;
+.questionIndex {
+  display: flex;
+  flex-direction: row;
+  color: #FFFFFF;
+  font-size: 32rpx;
+  justify-content: center;
+  background: linear-gradient(to top, #fbcb53, #fe943e);
+  width: 100rpx;
+  border-radius: 30rpx 0 30rpx 0;
+  line-height: 60rpx;
+  height: 60rpx;
+  margin-bottom: 40rpx;
 
-    > div {
-        color: #FFFFFF;
-        height: 60px;
-        width: 60px;
-        line-height: 60px;
-        text-align: center;
-        font-size: 14px;
-        border-radius: 50%;
-    }
+  > view:nth-of-type(1) {
+    font-size: 32rpx;
+  }
+
+  > view:nth-of-type(2) {
+    font-size: 24rpx;
+  }
 }
 
 .box {
-    background-color: #ffffff;
-    min-width: 500px;
-    padding: 20px;
+  background-color: #FFFFFF;
+  position: fixed !important;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 500rpx;
+  pointer-events: auto;
+  border-radius: 30rpx;
+  z-index: 100;
 }
 
-.noAnswer {
-    background-color: #8A7F7F;
+.question {
+  margin: 0 30rpx;
+  color: rgba(47, 63, 90, 1)
 }
 
-.alreadyAnswer {
-    background-color: #409eff;
+.button {
+  width: 200rpx;
+  margin: 30rpx 30rpx 30rpx 0;
+  border-radius: 60rpx;
 }
 </style>

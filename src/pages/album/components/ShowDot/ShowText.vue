@@ -1,29 +1,30 @@
 <script lang="ts" setup>
-import { CoreDotType, DotTypeConfigMapping } from '@/model/entity/CoreDot'
-import { StrUtil } from 'typescript-util'
+import { CoreDot } from '@/model/entity/CoreDot'
 import { computed } from 'vue'
+import { dotStyle } from '@/utils/dotStyle'
 
 const props = defineProps<{
-  data: DotTypeConfigMapping[CoreDotType.文本]
+  data: CoreDot
 }>()
 
 const showText = computed(() => {
-  let str = props.data.text
-  if (StrUtil.isEmpty(str)) {
-    return StrUtil.EMPTY
+  let str = props.data.config.text
+  if (!str) {
+    return
   }
   return str.replaceAll('\n', '<br>')
 })
 
+const style = dotStyle(props.data)
 </script>
 
 <template>
-  <div v-html="showText"></div>
+  <div :style="style" v-html="showText"></div>
 </template>
 
 <style lang="less" scoped>
 div {
-  background-color: rgba(255, 255, 255, .2);
+  //background-color: rgba(255, 255, 255, .2);
   backdrop-filter: blur(10px);
   padding: 5px 10px;
   border-radius: 3px;

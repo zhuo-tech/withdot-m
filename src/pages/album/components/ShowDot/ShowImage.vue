@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CoreDot, CoreDotType, DotTypeConfigMapping } from '@/model/entity/CoreDot'
+import { dotStyle } from '@/utils/dotStyle'
 import { videoAddress } from '@/utils/video'
 import { ref } from 'vue'
 
@@ -12,12 +13,7 @@ const props = defineProps<{
   data: CoreDot
 }>()
 
-const style = ref({
-  left: props.data.position.x  * 750 + 'rpx',
-  top: props.data.position.y * 410 + 'rpx',
-  width: (props.data.position.width as number) * 750 + 'rpx',
-  height:( props.data.position.width as number) * 410 + 'rpx',
-})
+const style = dotStyle(props.data)
 </script>
 
 <template>

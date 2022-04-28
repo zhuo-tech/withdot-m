@@ -1,14 +1,25 @@
 <template>
   <view class="box">
     <!--video原视频容器-->
-    <video id="myVideo" :src="videoAddress(videoData.materialData?.href)" @timeupdate="currentTime" />
-    <view class="cover">
-      <Dot v-for="(item,index) in currentDot" :key="index" :data="item" />
-    </view>
+    <video id="myVideo"
+           :src="videoAddress(videoData.materialData?.href)"
+           @fullscreenchange="videoFullScreen"
+           @timeupdate="currentTime">
+      <cover-view>
+        <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
+          <view v-for="(item,index) in currentDot" :key="index">
+            <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
+              <Dot :data="item" :videoScreen="videoScreen" />
+            </teleport>
+          </view>
+        </view>
+      </cover-view>
+    </video>
   </view>
 </template>
 
 <script lang="ts" setup>
+import { CoreDotType } from '@/model/entity/CoreDot'
 import Dot from '../Dot'
 import { CoreDot } from '@/model/entity/CoreDot'
 import { videoAddress } from '@/utils/video'
@@ -16,19 +27,28 @@ import { Notify } from 'vant'
 import { ref, watch } from 'vue'
 import { VideoDataType, VideoFun } from '@/api/album/videoApi'
 
+//传来的作品_id
 const props = defineProps({
   workId: {
     type: String,
   },
 })
 
+//绑定video是否全屏
+const videoScreen = ref(false)
+
+//视频数据
 let videoData = ref<VideoDataType>({} as VideoDataType)
 
+//视频打点数据
 let dotDate = ref<CoreDot[]>([])
+
 //视频实例
 const videoContext = uni.createVideoContext('myVideo')
 
+//当前打点数据
 const currentDot = ref<CoreDot[]>([])
+
 /**
  * 获得视频数据
  * @returns {Promise<void>}
@@ -42,11 +62,26 @@ const getVideoData = async () => {
   })
 }
 
+/**
+ * 当视频进入和退出全屏时触发
+ */
+const videoFullScreen = () => {
+  screen.orientation.lock('landscape')
+  videoScreen.value = !videoScreen.value
+}
+
+/**
+ * 视频播放时时间变化 并过滤出 该时间的打点数据
+ * @param event
+ */
 const currentTime = (event: any) => {
   const {currentTime} = event.detail
   currentDot.value = dotDate.value.filter(({start, end}) => currentTime >= start && currentTime <= (end ?? start))
 }
 
+/**
+ * 监听作品_id变化切换视频数据
+ */
 watch(() => props.workId, () => {
   getVideoData()
 })
@@ -73,10 +108,16 @@ watch(() => props.workId, () => {
     top: 0;
     left: 0;
     width: 100%;
-    height: 410rpx;
     z-index: 1;
     color: red;
   }
 }
 
+.coverFull {
+  height: 100vh;
+}
+
+.coverNoFull {
+  height: 410rpx;
+}
 </style>
