@@ -9,3 +9,4 @@ export function dotStyle(data: CoreDot) {
         height: Number(data.position.width as number * 100).toFixed(0) + '%',
     }
 }
+

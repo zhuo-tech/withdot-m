@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { CoreDot, CoreDotType, DotTypeConfigMapping } from '@/model/entity/CoreDot'
+import { CoreDot } from '@/model/entity/CoreDot'
+import { dotCogig } from '@/pages/album/components/ShowDot/dotCofig'
 import { dotStyle } from '@/utils/dotStyle'
 import { videoAddress } from '@/utils/video'
-import { ref } from 'vue'
 
 /**
  * 显示 coreDot config 中的 图片
@@ -13,7 +13,14 @@ const props = defineProps<{
   data: CoreDot
 }>()
 
+const emits = defineEmits<{
+  (event: 'videoStop'): void
+  (event: 'videoPlay'): void
+}>()
+
 const style = dotStyle(props.data)
+
+dotCogig(props.data, emits)
 </script>
 
 <template>

@@ -13,7 +13,7 @@
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
           <view v-for="(item,index) in currentDot" :key="index">
             <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
-              <Dot :data="item" :videoScreen="videoScreen" @videoStop="vieoStop" />
+              <Dot :data="item" :videoScreen="videoScreen" @videoPlay="videoPlay" @videoStop="vieoStop" />
             </teleport>
           </view>
         </view>
@@ -91,6 +91,7 @@ const currentTime = (event: any) => {
  */
 const vieoStop = () => {
   videoContext.pause()
+  videoDisableOperation()
 }
 
 /**
@@ -98,6 +99,7 @@ const vieoStop = () => {
  */
 const videoPlay = () => {
   videoContext.play()
+  startVideoBUtton()
 }
 
 /**

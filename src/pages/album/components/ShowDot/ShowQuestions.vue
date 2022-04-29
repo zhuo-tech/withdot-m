@@ -9,7 +9,13 @@ const props = defineProps<{
 
 const formData: Record<number, any> = {}
 
-const emits = defineEmits(['videoStop'])
+const overlay = ref(true)
+
+const emits = defineEmits(['videoStop', 'videoPlay'])
+
+const countdownTime = ref()
+
+const visible = ref(true)
 
 props.data.config.exam.forEach((item: any, index: number) => {
   switch (item.type) {
@@ -60,37 +66,63 @@ const uponQuestion = () => {
 
 const judgmentDot = () => {
   console.log(props.data.config, '打点参数')
-  const palay = props.data.config.pause
-  if (palay) {
-    emits('videoStop')
+  const {pause, time, switch: stopTime} = props.data.config
+  pause ? emits('videoStop') : null
+  if (stopTime) {
+    time ? countdown(time) : null
   }
 }
 
+const countdown = (time: number) => {
+  countdownTime.value = time
+  const timer = setInterval(() => {
+    countdownTime.value--
+    if (countdownTime.value === 0) {
+      clearInterval(timer)
+      overlay.value = false
+      visible.value = false
+      emits('videoPlay')
+    }
+  }, 1000)
+}
+
+const submit = () => {
+  overlay.value = false
+  visible.value = false
+  emits('videoPlay')
+}
+
 judgmentDot()
+
 const form = reactive(formData)
 </script>
 
 <template>
-  <van-overlay :show="true" />
-  <view class="box" @click.stop="()=>{}">
+  <van-overlay :show="overlay" />
+  <view :class="visible? 'box showBox':'box closeBox'" @click.stop="()=>{}">
     <van-form ref="formRef" :model="form" label-width="40px">
       <view v-for="(item,index) in data.config.exam" v-show="currentQuestion === index" :key="index" style="min-height: 30vh">
         <view class="questionIndex">
           <view>{{ index + 1 }}</view>
           /
           <view>{{ data.config.exam.length }}</view>
+          <view>{{ countdownTime }}</view>
         </view>
         <view v-if="item.type === QuestionTypeEnum.SAQ">
           <view class="question">{{ item.label }}</view>
-          <van-field v-model="form[index].currentAnswer" label="答案" type=""></van-field>
+          <van-field v-model="form[index].currentAnswer" label="答案" placeholder="请填写简答题内容"></van-field>
         </view>
         <view v-if="item.type === QuestionTypeEnum.TIANKONG">
           <view class="question">{{ item.label }}</view>
-          <van-field v-for="(i,ind) in item.content" :key="ind" v-model="form[index].currentAnswer[ind]" label="答案"></van-field>
+          <van-field v-for="(i,ind) in item.content"
+                     :key="ind"
+                     v-model="form[index].currentAnswer[ind]"
+                     label="答案"
+                     placeholder="请输入对应填空题内容"></van-field>
         </view>
         <view v-if="item.type === QuestionTypeEnum.XUANZE">
           <view class="question">{{ item.label }}</view>
-          <van-field v-for="(i,ind) in item.content" :key="ind" label="答案" name="checkBox">
+          <van-field v-for="(i,ind) in item.content" :key="ind" name="checkBox">
             <template #input>
               <van-checkbox v-model="form[index].currentAnswer[ind]">{{ i.answer }}</van-checkbox>
             </template>
@@ -115,7 +147,7 @@ const form = reactive(formData)
                       type="primary"
                       @click="uponQuestion">上一题
           </van-button>
-          <van-button class="button" type="primary">提交</van-button>
+          <van-button class="button" type="primary" @click="submit">提交</van-button>
         </view>
 
       </van-row>
@@ -176,5 +208,13 @@ const form = reactive(formData)
   width: 200rpx;
   margin: 30rpx 30rpx 30rpx 0;
   border-radius: 60rpx;
+}
+
+.showBox {
+  display: block;
+}
+
+.closeBox {
+  display: none;
 }
 </style>

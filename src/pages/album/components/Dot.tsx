@@ -12,10 +12,9 @@ export default defineComponent({
         data: Object,
         videoScreen: Boolean,
     },
-    emits: ['videoStop'],
+    emits: ['videoStop', 'videoPlay'],
     render() {
         const type = this.$props.data?.type
-        const sereen = this.$props.videoScreen
         let Show = <span>{ type } -- </span>
         switch (type as CoreDotType) {
             case CoreDotType.图片:
@@ -34,7 +33,7 @@ export default defineComponent({
         }
 
         // @ts-ignore
-        return <Show data={ this.$props.data } onVideoStop={ () => this.$emit('videoStop') } class="display-expanded"></Show>
+        return <Show data={ this.$props.data } onVideoStop={ () => this.$emit('videoStop') } onVideoPlay={ () => this.$emit('videoPlay') } class="display-expanded"></Show>
     },
 })
 
