@@ -14,11 +14,15 @@ const emits = defineEmits<{
 
 const style = dotStyle(props.data)
 
+const toUrl = () => {
+  window.open(props.data.config.url)
+}
+
 dotCogig(props.data, emits)
 </script>
 
 <template>
-  <el-link :href="data.config.url" :style="style" target="_blank">{{ data.config.url }}</el-link>
+  <view :href="data.config.url" :style="style" target="_blank" @click="toUrl">{{ data.config.url }}</view>
 </template>
 
 <style scoped>

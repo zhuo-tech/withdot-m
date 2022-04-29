@@ -5,15 +5,15 @@
            :controls="videoButton"
            :show-center-play-btn="videoButton"
            :show-fullscreen-btn="videoButton"
-           autoplay
            :src="videoAddress(videoData.materialData?.href)"
+           autoplay
            @fullscreenchange="videoFullScreen"
            @timeupdate="currentTime">
       <cover-view>
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
           <view v-for="(item,index) in currentDot" :key="index">
             <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
-              <Dot :data="item" :videoScreen="videoScreen" @videoPlay="videoPlay" @videoStop="vieoStop" />
+              <Dot :data="item" :videoScreen="videoScreen" @addParameters="addParameters" @videoPlay="videoPlay" @videoStop="vieoStop" />
             </teleport>
           </view>
         </view>
@@ -62,10 +62,21 @@ const currentDot = ref<CoreDot[]>([])
  */
 const getVideoData = async () => {
   await VideoFun().getVideoFun(props.workId as string).then((response: any) => {
+    console.log(response)
     videoData.value = response
     dotDate.value = response.dotData
+    dataProcessing()
   }).catch((err: any) => {
     Notify({type: 'danger', message: err.toString()})
+  })
+}
+
+/**
+ * 处理打点数据 是否已经展示guole alreadyShow:boolean
+ */
+const dataProcessing = () => {
+  dotDate.value.forEach(item => {
+    item.alreadyShow = false
   })
 }
 
@@ -83,7 +94,7 @@ const videoFullScreen = () => {
  */
 const currentTime = (event: any) => {
   const {currentTime} = event.detail
-  currentDot.value = dotDate.value?.filter(({start, end}) => currentTime >= start && currentTime <= (end ?? start))
+  currentDot.value = dotDate.value?.filter(({start, end, alreadyShow}) => currentTime >= start && currentTime <= (end ?? start) && !alreadyShow)
 }
 
 /**
@@ -113,8 +124,16 @@ const startVideoBUtton = () => {
   videoButton.value = true
 }
 
-const addParameters = () => {
-
+/**
+ * 修改打点参数 alreadyShow 已经展示过了
+ * @param {string} _id 打点的_id
+ */
+const addParameters = (_id: string) => {
+  dotDate.value.forEach(item => {
+    if (item._id === _id) {
+      item.alreadyShow = true
+    }
+  })
 }
 
 /**

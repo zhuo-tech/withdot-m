@@ -11,7 +11,7 @@ const formData: Record<number, any> = {}
 
 const overlay = ref(true)
 
-const emits = defineEmits(['videoStop', 'videoPlay'])
+const emits = defineEmits(['videoStop', 'videoPlay', 'addParameters'])
 
 const countdownTime = ref()
 
@@ -87,10 +87,14 @@ const countdown = (time: number) => {
 }
 
 const submit = () => {
-
+  alearySumbit()
   overlay.value = false
   visible.value = false
   emits('videoPlay')
+}
+
+const alearySumbit = () => {
+  emits('addParameters', props.data._id)
 }
 
 judgmentDot()

@@ -12,7 +12,7 @@ export default defineComponent({
         data: Object,
         videoScreen: Boolean,
     },
-    emits: ['videoStop', 'videoPlay'],
+    emits: ['videoStop', 'videoPlay', 'addParameters'],
     render() {
         const type = this.$props.data?.type
         let Show = <span>{ type } -- </span>
@@ -32,8 +32,15 @@ export default defineComponent({
             default:
         }
 
-        // @ts-ignore
-        return <Show data={ this.$props.data } onVideoStop={ () => this.$emit('videoStop') } onVideoPlay={ () => this.$emit('videoPlay') } class="display-expanded"></Show>
+        return (
+            // @ts-ignore
+            <Show data={ this.$props.data }
+                  onVideoStop={ () => this.$emit('videoStop') }
+                  onVideoPlay={ () => this.$emit('videoPlay') }
+                  onAddParameters={ (_id: string) => this.$emit('addParameters', _id) }
+                  class="display-expanded">
+            </Show>
+        )
     },
 })
 

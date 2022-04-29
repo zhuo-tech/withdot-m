@@ -52,6 +52,7 @@ export class CoreDot<T extends CoreDotType = any> implements BaseEntity {
      */
     config: DotTypeConfigMapping[T]
 
+    alreadyShow: boolean
     createTime: number
     updateTime: number
     createBy: string
