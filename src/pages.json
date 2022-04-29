@@ -21,6 +21,18 @@
 			"style": {
 				"navigationBarTitleText": "专辑"
 			}
+		},
+		{
+			"path": "pages/my/orderForm/index",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		{
+			"path": "pages/my/orderForm/orderFormDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
 		}
 	],
 	"globalStyle": {

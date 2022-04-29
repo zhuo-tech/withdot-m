@@ -7,27 +7,40 @@
       <view class="name">154841212</view>
     </view>
     <view class="tabs">
-      <view class="tabsItem">
+      <view v-for="(item,index) in tabsData" :key="index" class="tabsItem" @click="toPath(item.toPath)">
         <view>
-          <image src="@/static/my/orderForm.png"></image>
+          <image :src="item.imgUrl"></image>
         </view>
-        <view>我的订单</view>
-      </view>
-      <view class="tabsItem">
-        <view>
-          <image src="@/static/my/purchased.png"></image>
-        </view>
-        <view>已购专辑</view>
+        <view>{{ item.name }}</view>
       </view>
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
+import orderImg from '@/static/my/orderForm.png'
+import purchasedImg from '@/static/my/purchased.png'
+import { ref } from 'vue'
+
+const tabsData = ref([
+  {imgUrl: orderImg, name: '我的订单', toPath: '/pages/my/orderForm/index'},
+  {imgUrl: purchasedImg, name: '已购专辑', toPath: ''},
+])
+
+const toPath = (path: string) => {
+  uni.navigateTo({
+    url: path,
+  })
+}
 
 </script>
 
 <style lang="less" scoped>
+
+page {
+  background-color: #fcfdff;
+}
+
 .box {
   background-color: #fcfdff;
 }
@@ -65,13 +78,16 @@
   margin: 40rpx;
   width: 670rpx;
   border-radius: 16rpx;
-  box-shadow: 0 0 8rpx rgba(255, 255, 255, 1);
+  box-shadow: 0 0 8rpx #f8f8fa;
   display: flex;
   justify-content: space-evenly;
+  background-color: #FFFFFF;
 
   .tabsItem {
     display: flex;
+    height: 180rpx;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 
     image {
