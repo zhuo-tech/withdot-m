@@ -87,6 +87,7 @@ const countdown = (time: number) => {
 }
 
 const submit = () => {
+
   overlay.value = false
   visible.value = false
   emits('videoPlay')
@@ -99,15 +100,22 @@ const form = reactive(formData)
 
 <template>
   <van-overlay :show="overlay" />
-  <view :class="visible? 'box showBox':'box closeBox'" @click.stop="()=>{}">
+  <view :class="visible? 'box showBox':'box closeBox'" :name="$attrs" @click.stop="()=>{}">
     <van-form ref="formRef" :model="form" label-width="40px">
       <view v-for="(item,index) in data.config.exam" v-show="currentQuestion === index" :key="index" style="min-height: 30vh">
-        <view class="questionIndex">
-          <view>{{ index + 1 }}</view>
-          /
-          <view>{{ data.config.exam.length }}</view>
-          <view>{{ countdownTime }}</view>
+        <view class="top">
+          <view class="questionIndex">
+            <view>{{ index + 1 }}</view>
+            /
+            <view>{{ data.config.exam.length }}</view>
+          </view>
+          <view v-if="data.config.switch">
+            <van-icon name="clock-o" />
+            <span>{{ countdownTime }}</span>
+            秒
+          </view>
         </view>
+
         <view v-if="item.type === QuestionTypeEnum.SAQ">
           <view class="question">{{ item.label }}</view>
           <van-field v-model="form[index].currentAnswer" label="答案" placeholder="请填写简答题内容"></van-field>
@@ -157,6 +165,26 @@ const form = reactive(formData)
 </template>
 
 <style lang="less" scoped>
+.top {
+  display: flex;
+  justify-content: space-between;
+
+  > view:nth-of-type(2) {
+    height: 60rpx;
+    line-height: 60rpx;
+    margin-right: 20rpx;
+    color: rgba(13, 121, 255, 1);
+
+    .van-icon {
+      margin-right: 10rpx;
+    }
+
+    > span {
+      margin-right: 10rpx;
+    }
+  }
+}
+
 .van-field {
   padding-left: 30rpx;
 }

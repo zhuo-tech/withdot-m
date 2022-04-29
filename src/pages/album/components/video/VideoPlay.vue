@@ -83,7 +83,7 @@ const videoFullScreen = () => {
  */
 const currentTime = (event: any) => {
   const {currentTime} = event.detail
-  currentDot.value = dotDate.value.filter(({start, end}) => currentTime >= start && currentTime <= (end ?? start))
+  currentDot.value = dotDate.value?.filter(({start, end}) => currentTime >= start && currentTime <= (end ?? start))
 }
 
 /**
@@ -113,12 +113,18 @@ const startVideoBUtton = () => {
   videoButton.value = true
 }
 
+const addParameters = () => {
+
+}
+
 /**
  * 监听作品_id变化切换视频数据
  */
 watch(() => props.workId, () => {
   getVideoData()
 })
+
+videoDisableOperation()
 
 </script>
 
