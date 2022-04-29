@@ -40,6 +40,7 @@ const {
   vieoStop,
   videoPlay,
   videoDisableOperation,
+  startVideoBUtton,
 } = videoService()
 
 //传来的作品_id
@@ -55,6 +56,7 @@ const props = defineProps({
 const videoFullScreen = () => {
   screen.orientation.lock('landscape')
   videoScreen.value = !videoScreen.value
+  console.log(videoScreen.value)
 }
 
 /**
@@ -65,6 +67,7 @@ watch(() => props.workId, () => {
 })
 
 videoDisableOperation()
+startVideoBUtton()
 
 </script>
 
