@@ -75,7 +75,7 @@ const getVideoData = async () => {
  * 处理打点数据 是否已经展示guole alreadyShow:boolean
  */
 const dataProcessing = () => {
-  dotDate.value.forEach(item => {
+  dotDate.value?.forEach(item => {
     item.alreadyShow = false
   })
 }
