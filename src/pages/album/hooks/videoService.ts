@@ -57,14 +57,6 @@ export function videoService() {
     }
 
     /**
-     * 当视频进入和退出全屏时触发
-     */
-    const videoFullScreen = () => {
-        screen.orientation.lock('landscape')
-        videoScreen.value = !videoScreen.value
-    }
-
-    /**
      * 修改打点参数 alreadyShow 已经展示过了
      * @param {string} _id 打点的_id
      */
@@ -110,7 +102,6 @@ export function videoService() {
         dotDate,
         getVideoData,
         currentDot,
-        videoFullScreen,
         currentTime,
         addParameters,
         vieoStop,

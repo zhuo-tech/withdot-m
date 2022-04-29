@@ -35,7 +35,6 @@ const {
   videoData,
   getVideoData,
   currentDot,
-  videoFullScreen,
   currentTime,
   addParameters,
   vieoStop,
@@ -49,6 +48,14 @@ const props = defineProps({
     type: String,
   },
 })
+
+/**
+ * 当视频进入和退出全屏时触发
+ */
+const videoFullScreen = () => {
+  screen.orientation.lock('landscape')
+  videoScreen.value = !videoScreen.value
+}
 
 /**
  * 监听作品_id变化切换视频数据
