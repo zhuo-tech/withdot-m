@@ -7,12 +7,14 @@
       <image mode="aspectFill" src="../../static/树.png"></image>
     </view>
     <view class="content">
-      <view class="album">
-        <image class="cover" mode="aspectFill" src="../../static/树.png"></image>
-        <view class="name">专辑名称</view>
+      <view v-for="(item,index) in albumList" :key="index" class="album" @click="toAlbum(item._id)">
+        <image :src="videoAddress(item.coverHref)" class="cover" lazy-load="true" mode="aspectFill"></image>
+        <view class="name">{{ item.title }}</view>
         <view class="author">理光</view>
         <view class="tab">
-          <span>标签|</span><span>345人已学</span>
+          <span>标签|</span>
+          <span>345人已学</span>
+          s
         </view>
       </view>
     </view>
@@ -21,8 +23,11 @@
 
 <script lang="ts" setup>
 import { indexService } from './hooks/indexService'
+import { videoAddress } from '@/utils/video'
 
-indexService().getAlbumList()
+const {albumList, getAlbumList, toAlbum} = indexService()
+
+getAlbumList()
 </script>
 
 <style lang="less" scoped>
@@ -54,6 +59,8 @@ indexService().getAlbumList()
       margin: 70rpx 0 0 0rpx;
       width: 260rpx;
       height: 370rpx;
+      object-fit: cover;
+      border-radius: 16rpx;
     }
 
     .name {

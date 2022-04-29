@@ -4,6 +4,7 @@
     <video id="myVideo"
            :controls="videoButton"
            :show-center-play-btn="videoButton"
+           :enable-progress-gesture="videoButton"
            :show-fullscreen-btn="videoButton"
            :src="videoAddress(videoData.materialData?.href)"
            autoplay
@@ -27,7 +28,7 @@ import { videoService } from '@/pages/album/hooks/videoService'
 import { CoreDotType } from '@/model/entity/CoreDot'
 import Dot from '../Dot'
 import { videoAddress } from '@/utils/video'
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 
 const {
   videoButton,
@@ -66,9 +67,13 @@ watch(() => props.workId, () => {
   getVideoData(props.workId as string)
 })
 
-videoDisableOperation()
-startVideoBUtton()
-
+watch(() => videoData.value.materialData?.href, () => {
+  if (!videoData.value.materialData?.href) {
+    videoDisableOperation()
+  } else {
+    startVideoBUtton()
+  }
+}, {immediate: true})
 </script>
 
 <style lang="less" scoped>

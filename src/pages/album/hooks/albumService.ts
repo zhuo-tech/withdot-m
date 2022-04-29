@@ -9,7 +9,7 @@ export function albumService() {
 
     const work_id = ref('')
 
-    const getAblumWorkList = (albumId: string = '6268f20c9ff4edb907537198') => {
+    const getAblumWorkList = (albumId: string) => {
         getAlbumWorklApi(albumId).then(response => {
             albumWork.value = response.workList
         }).catch(err => {
