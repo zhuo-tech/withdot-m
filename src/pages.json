@@ -39,6 +39,15 @@
 			"style": {
 				"navigationBarTitleText": "已购专辑"
 			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录页",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
 		}
 	],
 	"globalStyle": {

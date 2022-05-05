@@ -1,4 +1,5 @@
 import { CoreAlbum } from '@/model/entity/CoreAlbum'
+import { whetherToLogIn } from '@/utils/token'
 import { Notify } from 'vant'
 import { ref } from 'vue'
 import { getAlbumListApi } from '@/api/home/index'
@@ -16,16 +17,14 @@ export function indexService() {
     const getAlbumList = async () => {
         getAlbumListApi().then(response => {
             albumList.value = response.data
-            console.log(albumList.value, '?????????')
         }).catch(err => {
             Notify({type: 'danger', message: err.toString()})
         })
     }
 
     const toAlbum = (albumId: string) => {
-        uni.navigateTo({
-            url: `/pages/album/index?albumId=${ albumId }`,
-        })
+        const path = `/pages/album/index?albumId=${ albumId }`
+        whetherToLogIn(path)
     }
 
     return {

@@ -18,21 +18,9 @@
 </template>
 
 <script lang="ts" setup>
-import orderImg from '@/static/my/orderForm.png'
-import purchasedImg from '@/static/my/purchased.png'
-import { ref } from 'vue'
+import { indexService } from '@/pages/my/indexService'
 
-const tabsData = ref([
-  {imgUrl: orderImg, name: '我的订单', toPath: '/pages/my/orderForm/index'},
-  {imgUrl: purchasedImg, name: '已购专辑', toPath: '/pages/my/album/index'},
-])
-
-const toPath = (path: string) => {
-  uni.navigateTo({
-    url: path,
-  })
-}
-
+const {tabsData, toPath} = indexService()
 </script>
 
 <style lang="less" scoped>
