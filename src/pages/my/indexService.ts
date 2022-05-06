@@ -1,6 +1,6 @@
 import orderImg from '@/static/my/orderForm.png'
 import purchasedImg from '@/static/my/purchased.png'
-import { whetherToLogIn } from '@/utils/token'
+import { whetherToLogIn, getUserInfo } from '@/utils/token'
 import { ref } from 'vue'
 
 export function indexService() {
@@ -13,7 +13,10 @@ export function indexService() {
         whetherToLogIn(path)
     }
 
+    const toLogin = () => uni.navigateTo({url: '/pages/login/index'})
+
     return {
+        toLogin,
         tabsData,
         toPath,
     }

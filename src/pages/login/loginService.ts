@@ -19,10 +19,11 @@ export function loginService() {
             Notify('请填写手机号')
             return
         }
-        countdown()
         mobileSendCode(form.value.phone).then(() => {
         }).catch((err: any) => {
             Notify(err.toString())
+        }).finally(() => {
+            countdown()
         })
     }
 

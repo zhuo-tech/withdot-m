@@ -4,7 +4,8 @@
       <view class="avatar">
         <image src="@/static/my/avatar.png"></image>
       </view>
-      <view class="name">154841212</view>
+      <view v-if="!getToken()" class="name" @click="toLogin">登录</view>
+      <view v-else class="name"> {{ userInfo.username }}</view>
     </view>
     <view class="tabs">
       <view v-for="(item,index) in tabsData" :key="index" class="tabsItem" @click="toPath(item.toPath)">
@@ -18,9 +19,19 @@
 </template>
 
 <script lang="ts" setup>
+import { getUserInfo } from '@/utils/token'
+import { getToken } from '@/utils/token'
 import { indexService } from '@/pages/my/indexService'
+import { onLoad } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 
-const {tabsData, toPath} = indexService()
+const {tabsData, toPath, toLogin} = indexService()
+
+const userInfo = ref()
+
+onLoad(() => {
+  userInfo.value = getUserInfo()
+})
 </script>
 
 <style lang="less" scoped>

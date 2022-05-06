@@ -22,3 +22,14 @@ export function whetherToLogIn(path: string) {
         .catch(() => {
         })
 }
+
+export function setUserInfo(userInfo: any) {
+    uni.setStorageSync('user-info', userInfo)
+}
+
+export function getUserInfo() {
+    if (!getToken()) {
+        return
+    }
+    return uni.getStorageSync('user-info')
+}
