@@ -19,7 +19,11 @@ export function loginService() {
             Notify('请填写手机号')
             return
         }
-        mobileSendCode(form.value.phone).then(() => {
+        mobileSendCode(form.value.phone).then((res: any) => {
+            if (res.code !== 0) {
+                Notify(res.error)
+                return
+            }
         }).catch((err: any) => {
             Notify(err.toString())
         }).finally(() => {

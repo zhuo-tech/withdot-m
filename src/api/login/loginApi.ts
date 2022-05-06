@@ -18,7 +18,7 @@ export async function smsLogin(username: any, code: any) {
         if (response.code !== 0) {
             return
         }
-        setUserInfo(response.data.user.data)
+        setUserInfo(response.data.user)
         setToken(response.data.access_token)
     }).catch(err => {
         Notify(err.toString())

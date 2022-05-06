@@ -4,7 +4,7 @@
       <view class="avatar">
         <image src="@/static/my/avatar.png"></image>
       </view>
-      <view v-if="!getToken()" class="name" @click="toLogin">登录</view>
+      <view v-if="!userInfo" class="name" @click="toLogin">登录</view>
       <view v-else class="name"> {{ userInfo.username }}</view>
     </view>
     <view class="tabs">
@@ -19,11 +19,15 @@
 </template>
 
 <script lang="ts" setup>
-import { getToken } from '@/utils/token'
 import { indexService } from '@/pages/my/indexService'
+import { onActivated } from 'vue'
 
 const {tabsData, toPath, toLogin, userInfo, getUserMessage} = indexService()
-getUserMessage()
+
+onActivated(() => {
+  getUserMessage()
+  console.log(userInfo, '用户信息')
+})
 </script>
 
 <style lang="less" scoped>
