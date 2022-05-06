@@ -1,5 +1,4 @@
 import { cloud } from '@/config/cloud'
-import { useUserStore } from '@/store/user'
 import { setToken, setUserInfo } from '@/utils/token'
 import { Notify } from 'vant'
 
@@ -19,8 +18,7 @@ export async function smsLogin(username: any, code: any) {
         if (response.code !== 0) {
             return
         }
-        // setUserInfo(response.data.user)
-        useUserStore().update()
+        setUserInfo(response.data.user.data)
         setToken(response.data.access_token)
     }).catch(err => {
         Notify(err.toString())
