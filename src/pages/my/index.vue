@@ -19,19 +19,11 @@
 </template>
 
 <script lang="ts" setup>
-import { getUserInfo } from '@/utils/token'
 import { getToken } from '@/utils/token'
 import { indexService } from '@/pages/my/indexService'
-import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
 
-const {tabsData, toPath, toLogin} = indexService()
-
-const userInfo = ref()
-
-onLoad(() => {
-  userInfo.value = getUserInfo()
-})
+const {tabsData, toPath, toLogin, userInfo, getUserMessage} = indexService()
+getUserMessage()
 </script>
 
 <style lang="less" scoped>
