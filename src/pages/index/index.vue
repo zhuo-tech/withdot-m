@@ -2,7 +2,7 @@
   <view>
     <view class="top">
       <van-cell-group inset style="border-radius: 100rpx">
-        <van-field v-model="searchValue" left-icon="search" placeholder="搜索" @click-left-icon="getSearchAlbumList" />
+        <van-field v-model="searchWord" left-icon="search" placeholder="搜索" @click-left-icon="getSearchAlbumList" />
       </van-cell-group>
       <image mode="aspectFill" src="../../static/树.png"></image>
     </view>
@@ -23,10 +23,10 @@
 </template>
 
 <script lang="ts" setup>
-import { indexService } from './hooks/indexService'
+import { useIndex } from '@/pages/index/hooks/useIndex'
 import { videoAddress } from '@/utils/video'
 
-const {albumList, getAlbumList, toAlbum, noMore, searchValue, getSearchAlbumList} = indexService()
+const {albumList, getAlbumList, toAlbum, noMore, searchWord, getSearchAlbumList} = useIndex()
 
 getAlbumList()
 </script>
