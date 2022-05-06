@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { videoAddress } from '@/utils/video'
+import { orderDetailService } from '@/pages/my/hooks/orderDetailService'
+import { filterTime } from '@/utils/day'
 
-const detail = ref({
-  name: '你好啊灼灼',
-  price: '250',
-})
-
+const {orderDetail} = orderDetailService()
 </script>
 
 <template>
@@ -16,29 +14,29 @@ const detail = ref({
     </view>
     <view class="detail">
       <view>
-        <image src="@/static/树.png"></image>
+        <image :src="videoAddress(orderDetail.album?.coverHref)"></image>
       </view>
       <view>
-        <view>{{ detail.name }}</view>
-        <view>￥:{{ detail.price }}</view>
+        <view>{{ orderDetail.album?.title }}</view>
+        <view>￥:{{ orderDetail.amount }}</view>
       </view>
     </view>
     <view class="orderFormDetail">
       <view>
         <view>课程金额</view>
-        <view>￥:250</view>
+        <view>￥:{{ orderDetail.amount }}</view>
       </view>
       <view>
         <view>订单编号</view>
-        <view>11111111111111</view>
+        <view>{{ orderDetail.payOrderId }}</view>
       </view>
       <view>
         <view>支付时间</view>
-        <view>05-16 14:16:17</view>
+        <view>{{ filterTime(orderDetail.createTime) }}</view>
       </view>
       <view>
         <view>支付金额</view>
-        <view>￥:250</view>
+        <view>￥:{{ orderDetail.amount }}</view>
       </view>
     </view>
   </view>

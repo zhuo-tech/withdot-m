@@ -1,3 +1,5 @@
+import { CoreAlbum } from '@/model/entity/CoreAlbum'
+
 /**
  * 商品订单表
  */
@@ -25,6 +27,7 @@ export class PayGoodsOrder {
    */
   amount: string
 
+  album: CoreAlbum
   /**
    * 用户openid
    */

@@ -1,10 +1,11 @@
 import { DB } from '@/config/cloud'
 import { CoreAlbum } from '@/model/entity/CoreAlbum'
+import { LogicDelete } from '@/model/LogicDelete'
 
 export async function getAlbumListApi(pages: any) {
     const countRes = await DB.collection(CoreAlbum.TABLE_NAME)
         .where({
-            delFlag: 0,
+            delFlag: LogicDelete.NORMAL,
         })
         .count()
     if (!countRes.ok) {
@@ -12,7 +13,7 @@ export async function getAlbumListApi(pages: any) {
     }
     const albumRes = await DB.collection(CoreAlbum.TABLE_NAME)
         .where({
-            delFlag: 0,
+            delFlag: LogicDelete.NORMAL,
         })
         .page({
             current: pages.current,

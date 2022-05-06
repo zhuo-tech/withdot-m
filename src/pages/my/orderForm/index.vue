@@ -1,26 +1,19 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import imgUrl from '@/static/树.png'
+import { orderFormService } from '@/pages/my/hooks/orderFormService'
+import { videoAddress } from '@/utils/video'
 
-const orderFormList = ref([
-  {imgUrl: imgUrl, name: 'UI技能必备动效果你好爱喝酒哈桑', price: '250'},
-])
+const {orderList, toDetail} = orderFormService()
 
-const toDetail = () => {
-  uni.navigateTo({
-    url: '/pages/my/orderForm/orderFormDetail',
-  })
-}
 </script>
 
 <template>
   <view class="box">
-    <view v-for="(item,index) in orderFormList" :key="index" class="item" @click="toDetail()">
+    <view v-for="(item,index) in orderList" :key="index" class="item" @click="toDetail(item._id)">
       <view>
-        <image :src="item.imgUrl"></image>
+        <image :src="videoAddress(item.album.coverHref)"></image>
       </view>
-      <view>{{ item.name }}</view>
-      <view>￥:{{ item.price }}</view>
+      <view>{{ item.album.title }}</view>
+      <view>￥:{{ item.amount }}</view>
     </view>
   </view>
 </template>

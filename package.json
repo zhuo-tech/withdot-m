@@ -51,6 +51,7 @@
     "@dcloudio/uni-mp-toutiao": "^3.0.0-alpha-3031220220222002",
     "@dcloudio/uni-mp-weixin": "^3.0.0-alpha-3031220220222002",
     "@dcloudio/uni-quickapp-webview": "^3.0.0-alpha-3031220220222002",
+    "dayjs": "^1.11.1",
     "laf-client-sdk": "^0.7.11",
     "less": "^4.1.2",
     "pinia": "^2.0.11",

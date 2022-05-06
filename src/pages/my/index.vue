@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { indexService } from '@/pages/my/indexService'
+import { indexService } from '@/pages/my/hooks/indexService'
 import { onActivated } from 'vue'
 
 const {tabsData, toPath, toLogin, userInfo, getUserMessage} = indexService()

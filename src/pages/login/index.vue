@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { loginService } from '@/pages/login/loginService'
+import { loginService } from '@/pages/login/hooks/loginService'
 
 const {time, form, clearPhone, getCode, onsubmit} = loginService()
 </script>
