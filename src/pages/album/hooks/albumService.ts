@@ -11,7 +11,7 @@ export function albumService() {
 
     const getAblumWorkList = (albumId: string) => {
         getAlbumWorklApi(albumId).then(response => {
-            albumWork.value = response.workList
+            albumWork.value = response?.workList
         }).catch(err => {
             Notify({type: 'danger', message: err.toString()})
         })

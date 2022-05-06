@@ -8,6 +8,7 @@ const {orderList, toDetail} = orderFormService()
 
 <template>
   <view class="box">
+
     <view v-for="(item,index) in orderList" :key="index" class="item" @click="toDetail(item._id)">
       <view>
         <image :src="videoAddress(item.album.coverHref)"></image>
@@ -24,7 +25,7 @@ page {
 }
 
 .box {
-  padding: 30rpx;
+  padding: 0 30rpx 30rpx 30rpx;
 }
 
 .item {
@@ -37,6 +38,7 @@ page {
   font-weight: Bold;
   padding: 30rpx;
   border-radius: 16rpx;
+  margin-top: 32rpx;
 
   > view:nth-of-type(1) {
     width: 90rpx;

@@ -1,16 +1,18 @@
 <template>
   <view class="box">
-    <VideoPlay :workId="work_id"></VideoPlay>
-    <view class="course">
-      <view class="title">课程目录</view>
-      <view v-for="(item,index) in albumWork" :key="index" class="content" @click="playVideo(item._id)">
-        <view>
-          <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
-          <view class="size">时长
-            <span>30:01</span>
+    <view v-if="!albumWork || albumWork.length ===0 " class="nodata">该专辑还未添加作品</view>
+    <view v-else>
+      <VideoPlay :workId="work_id"></VideoPlay>
+      <view class="course">
+        <view class="title">课程目录</view>
+        <view v-for="(item,index) in albumWork" :key="index" class="content" @click="playVideo(item._id)">
+          <view>
+            <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
+            <view class="size">时长
+              <span>30:01</span>
+            </view>
           </view>
         </view>
-        <view></view>
       </view>
     </view>
   </view>
@@ -57,6 +59,13 @@ const {work_id, albumWork, playVideo} = albumService()
       }
     }
   }
+}
+
+.nodata {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 </style>

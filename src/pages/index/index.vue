@@ -2,7 +2,7 @@
   <view>
     <view class="top">
       <van-cell-group inset style="border-radius: 100rpx">
-        <van-field v-model="indexService.searchValue" left-icon="search" placeholder="搜索" />
+        <van-field v-model="searchValue" left-icon="search" placeholder="搜索" @click-left-icon="getSearchAlbumList" />
       </van-cell-group>
       <image mode="aspectFill" src="../../static/树.png"></image>
     </view>
@@ -18,6 +18,7 @@
         </view>
       </view>
     </view>
+    <view v-show="noMore" class="noMore">没有更多啦!</view>
   </view>
 </template>
 
@@ -25,7 +26,7 @@
 import { indexService } from './hooks/indexService'
 import { videoAddress } from '@/utils/video'
 
-const {albumList, getAlbumList, toAlbum} = indexService()
+const {albumList, getAlbumList, toAlbum, noMore, searchValue, getSearchAlbumList} = indexService()
 
 getAlbumList()
 </script>
@@ -84,5 +85,13 @@ getAlbumList()
     }
 
   }
+}
+
+.noMore {
+  text-align: center;
+  color: #5b5a5a;
+  font-size: 28rpx;
+  font-weight: Bolder;
+  margin-bottom: 40rpx;
 }
 </style>

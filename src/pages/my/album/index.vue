@@ -7,7 +7,7 @@ const {purchasedAlbumList, toAlbum} = purchasedService()
 
 <template>
   <view class="box">
-    <view v-if="purchasedAlbumList.length === 0">您还没有购买的专辑</view>
+    <view v-if="purchasedAlbumList.length === 0" class="noData">您还没有购买的专辑</view>
     <view v-for="(item,index) in purchasedAlbumList" v-else :key="index" class="item">
       <view>
         <image :src="videoAddress(item.album.coverHref)"></image>
@@ -24,7 +24,7 @@ page {
 }
 
 .box {
-  padding: 30rpx;
+  padding: 0 30rpx 30rpx 30rpx;
 }
 
 .item {
@@ -41,6 +41,7 @@ page {
   justify-content: space-evenly;
   align-items: center;
   box-shadow: 0 0 32rpx rgba(160, 160, 160, 0.7);
+  margin-top: 32rpx;
 
   > view:nth-of-type(1) {
     width: 260rpx;
@@ -66,5 +67,12 @@ page {
     line-height: 74rpx;
     text-align: center;
   }
+}
+
+.noData {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
