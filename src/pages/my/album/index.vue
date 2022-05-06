@@ -1,15 +1,19 @@
 <script lang="ts" setup>
+import { purchasedService } from '@/pages/my/hooks/purchasedService'
+import { videoAddress } from '@/utils/video'
 
+const {purchasedAlbumList, toAlbum} = purchasedService()
 </script>
 
 <template>
   <view class="box">
-    <view class="item">
+    <view v-if="purchasedAlbumList.length === 0">您还没有购买的专辑</view>
+    <view v-for="(item,index) in purchasedAlbumList" v-else :key="index" class="item">
       <view>
-        <image src="@/static/树.png"></image>
+        <image :src="videoAddress(item.album.coverHref)"></image>
       </view>
-      <view>清平乐,年年雪里</view>
-      <view>立即观看</view>
+      <view>{{ item.album.title }}</view>
+      <view @click="toAlbum(item.album._id)">立即观看</view>
     </view>
   </view>
 </template>
