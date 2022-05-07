@@ -97,7 +97,6 @@ const countdown = (time: number) => {
 const submit = () => {
   alearySumbit()
   visible.value = false
-  emits('videoPlay')
   let answer: any = []
   props.data.config.exam.forEach((item: any) => {
     let question: AnswerType = {
@@ -168,6 +167,7 @@ const alearySumbit = () => {
 const sureQuestion = () => {
   overlay.value = false
   finishBox.value = false
+  emits('videoPlay')
 }
 
 judgmentDot()

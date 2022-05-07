@@ -14,7 +14,7 @@ const {orderDetail} = orderDetailService()
     </view>
     <view class="detail">
       <view>
-        <image :src="videoAddress(orderDetail.album?.coverHref)"></image>
+        <image :src="videoAddress(orderDetail.album?.coverHref)" mode="aspectFit"></image>
       </view>
       <view>
         <view>{{ orderDetail.album?.title }}</view>

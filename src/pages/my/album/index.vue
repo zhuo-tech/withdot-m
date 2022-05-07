@@ -10,7 +10,7 @@ const {purchasedAlbumList, toAlbum} = purchasedService()
     <view v-if="purchasedAlbumList.length === 0" class="noData">您还没有购买的专辑</view>
     <view v-for="(item,index) in purchasedAlbumList" v-else :key="index" class="item">
       <view>
-        <image :src="videoAddress(item.album.coverHref)"></image>
+        <image :src="videoAddress(item.album.coverHref)" mode="aspectFit"></image>
       </view>
       <view>{{ item.album.title }}</view>
       <view @click="toAlbum(item.album._id)">立即观看</view>
