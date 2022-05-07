@@ -115,7 +115,7 @@ const submit = () => {
         judgmentMultipleChoice(item, index)
         break
       case QuestionTypeEnum.SAQ:
-        addCount()
+        judgeShortAnswerQuestions(item, index)
         break
       default:
     }
@@ -136,11 +136,18 @@ const judgmentMultipleChoice = (item: any, index: number) => {
 //判断填空题题是否正确
 
 const judgeFillInTheBlankQuestions = (item: any, index: number) => {
-  console.log(item, index, '填空题')
   for (let i = 0; i < item.answer.length; i++) {
     if (item.answer[i].answer !== form[index].currentAnswer[i]) {
       return
     }
+  }
+  addCount()
+}
+
+//判断简答题是否正确
+const judgeShortAnswerQuestions = (item: any, index: number) => {
+  if (!form[index].currentAnswer) {
+    return
   }
   addCount()
 }
@@ -231,7 +238,7 @@ const form = reactive(formData)
 
     </van-form>
   </view>
-  <view :class="finishBox ? 'finishQuestion':''">
+  <view :class="finishBox ? 'finishQuestion':'closeBox'">
     <view class="top">
       <view>
         <img alt="" src="../../../../static/question/face.png" srcset="">
@@ -341,10 +348,10 @@ const form = reactive(formData)
   top: 50%;
   transform: translate(-50%, -50%);
   width: 500rpx;
+  height: 600rpx;
   pointer-events: auto;
   border-radius: 30rpx;
   z-index: 100;
-  min-height: 40vh;
   padding: 78rpx 0;
 
   .top {
