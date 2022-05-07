@@ -13,19 +13,24 @@ const props = defineProps<{
 
 const formData: Record<number, any> = {}
 
+//控制遮罩层显示隐藏
 const overlay = ref(true)
 
 const emits = defineEmits(['videoStop', 'videoPlay', 'addParameters'])
 
+//倒计时时间
 const countdownTime = ref()
 
+//考试弹框的显示隐藏
 const visible = ref(true)
 
+//正确答案的数量
 const numberOfCorrectAnswers = ref<number>(0)
 
 //答题完成统计盒子 显示隐藏
 const finishBox = ref(false)
 
+//答题的form表单结构
 props.data.config.exam.forEach((item: any, index: number) => {
   switch (item.type) {
     case QuestionTypeEnum.SAQ:
@@ -59,20 +64,26 @@ props.data.config.exam.forEach((item: any, index: number) => {
   }
 })
 
+//当前的题目
 const currentQuestion = ref(0)
 
+//下一题按钮
 const nextQuestion = () => {
   if (props.data.config.exam.length >= (currentQuestion.value + 1)) {
     currentQuestion.value++
   }
 }
 
+//上一题按钮
 const uponQuestion = () => {
   if (currentQuestion.value > 0) {
     currentQuestion.value--
   }
 }
 
+/**
+ * 判断考试是否有 时间限制  如果有 执行倒计时函数
+ */
 const judgmentDot = () => {
   const {pause, time, switch: stopTime} = props.data.config
   pause ? emits('videoStop') : null
@@ -81,19 +92,24 @@ const judgmentDot = () => {
   }
 }
 
+/**
+ * 回答题目时间倒计时
+ * @param {number} time
+ */
 const countdown = (time: number) => {
   countdownTime.value = time
   const timer = setInterval(() => {
     countdownTime.value--
     if (countdownTime.value === 0) {
       clearInterval(timer)
-      overlay.value = false
-      visible.value = false
-      emits('videoPlay')
+      submit()
     }
   }, 1000)
 }
 
+/**
+ * 提交回答的题目
+ */
 const submit = () => {
   alearySumbit()
   visible.value = false
@@ -134,7 +150,6 @@ const judgmentMultipleChoice = (item: any, index: number) => {
 }
 
 //判断填空题题是否正确
-
 const judgeFillInTheBlankQuestions = (item: any, index: number) => {
   for (let i = 0; i < item.answer.length; i++) {
     if (item.answer[i].answer !== form[index].currentAnswer[i]) {
@@ -164,6 +179,7 @@ const alearySumbit = () => {
   emits('addParameters', props.data._id)
 }
 
+//考试完毕 点击成绩确认键 视频开始播放 遮罩层 成绩弹框隐藏
 const sureQuestion = () => {
   overlay.value = false
   finishBox.value = false
@@ -176,10 +192,14 @@ const form = reactive(formData)
 </script>
 
 <template>
+  <!--遮罩层-->
   <van-overlay :show="overlay" />
+
   <view :class="visible? 'box showBox':'box closeBox'" :name="$attrs" @click.stop="()=>{}">
     <van-form ref="formRef" :model="form" label-width="40px">
       <view v-for="(item,index) in data.config.exam" v-show="currentQuestion === index" :key="index" style="min-height: 30vh">
+
+        <!--考试弹框头部 倒计时-->
         <view class="top">
           <view class="questionIndex">
             <view>{{ index + 1 }}</view>
@@ -193,10 +213,13 @@ const form = reactive(formData)
           </view>
         </view>
 
+        <!--简答题-->
         <view v-if="item.type === QuestionTypeEnum.SAQ" class="answer">
           <view class="question">{{ item.label }}</view>
           <van-field v-model="form[index].currentAnswer" label="答案" placeholder="请填写简答题内容"></van-field>
         </view>
+
+        <!--填空题-->
         <view v-if="item.type === QuestionTypeEnum.TIANKONG" class="answer">
           <view class="question">{{ item.label }}</view>
           <van-field v-for="(i,ind) in item.content"
@@ -205,6 +228,8 @@ const form = reactive(formData)
                      label="答案"
                      placeholder="请输入对应填空题内容"></van-field>
         </view>
+
+        <!--选择题-->
         <view v-if="item.type === QuestionTypeEnum.XUANZE" class="answer">
           <view class="question">{{ item.label }}</view>
           <van-field v-for="(i,ind) in item.content" :key="ind" name="checkBox">
@@ -214,6 +239,8 @@ const form = reactive(formData)
           </van-field>
         </view>
       </view>
+
+      <!--控制按钮 提交 上一题 下一题-->
       <van-row justify="end" type="flex">
         <view v-if="(currentQuestion+1) !== data.config.exam.length">
           <van-button v-if="currentQuestion !== 0"
