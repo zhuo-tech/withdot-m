@@ -57,6 +57,7 @@ export function useIndex(): ReturnType {
         getAlbumList,
         toAlbum,
         getSearchAlbumList() {
+            console.log(arguments, 'getSearchAlbumList')
             albumList.value = []
             pages.value.current = 1
             getAlbumListApi(pages.value, searchWord.value)

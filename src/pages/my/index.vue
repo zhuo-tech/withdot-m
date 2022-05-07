@@ -20,13 +20,16 @@
 
 <script lang="ts" setup>
 import { indexService } from '@/pages/my/hooks/indexService'
+import { onLoad } from '@dcloudio/uni-app'
 import { onActivated } from 'vue'
 
 const {tabsData, toPath, toLogin, userInfo, getUserMessage} = indexService()
 
 onActivated(() => {
   getUserMessage()
-  console.log(userInfo, '用户信息')
+})
+onLoad(() => {
+  getUserMessage()
 })
 </script>
 

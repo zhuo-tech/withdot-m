@@ -2,7 +2,7 @@
   <view>
     <view class="top">
       <van-cell-group inset style="border-radius: 100rpx">
-        <van-field v-model="searchWord" left-icon="search" placeholder="搜索" @click-left-icon="getSearchAlbumList" />
+        <van-field v-model="searchWord" left-icon="search" placeholder="搜索" @update:model-value="search" />
       </van-cell-group>
       <image mode="aspectFill" src="../../static/树.png"></image>
     </view>
@@ -25,9 +25,13 @@
 <script lang="ts" setup>
 import { useIndex } from '@/pages/index/hooks/useIndex'
 import { videoAddress } from '@/utils/video'
+import { debounce } from '@/utils/debounce'
 
 const {albumList, getAlbumList, toAlbum, noMore, searchWord, getSearchAlbumList} = useIndex()
 
+const search = () => {
+  debounce(getSearchAlbumList, 1000)()
+}
 getAlbumList()
 </script>
 
@@ -37,7 +41,7 @@ getAlbumList()
   height: 428rpx;
   background: linear-gradient(to top, #ffffff, #0D79FF);
 
-  >image {
+  > image {
     width: 670rpx;
     height: 300rpx;
     margin: 40rpx;
