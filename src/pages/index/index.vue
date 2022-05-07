@@ -29,9 +29,8 @@ import { debounce } from '@/utils/debounce'
 
 const {albumList, getAlbumList, toAlbum, noMore, searchWord, getSearchAlbumList} = useIndex()
 
-const search = () => {
-  debounce(getSearchAlbumList, 1000)()
-}
+const search = debounce(getSearchAlbumList, 500)
+
 getAlbumList()
 </script>
 
