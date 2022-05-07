@@ -32,6 +32,7 @@ export function useIndex(): ReturnType {
             .then(({list, total}) => {
                 pages.value.total = total
                 albumList.value.push(...list)
+                console.log(albumList, '主页专辑列表数据')
             }).catch(err => Notify({type: 'danger', message: err.toString()}))
     }
 

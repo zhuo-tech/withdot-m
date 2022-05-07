@@ -10,12 +10,12 @@
       <view v-for="(item,index) in albumList" :key="index" class="album" @click="toAlbum(item._id)">
         <image :src="videoAddress(item.coverHref)" class="cover" lazy-load="true" mode="aspectFill"></image>
         <view class="name">{{ item.title }}</view>
-        <view class="author">理光</view>
-        <view class="tab">
-          <span>标签|</span>
-          <span>345人已学</span>
-          s
-        </view>
+        <!--<view class="author">理光</view>-->
+        <!--<view class="tab">-->
+        <!--  <span>标签|</span>-->
+        <!--  <span>345人已学</span>-->
+        <!--  s-->
+        <!--</view>-->
       </view>
     </view>
     <view v-show="noMore" class="noMore">没有更多啦!</view>
@@ -54,6 +54,7 @@ getAlbumList()
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
     width: 670rpx;
     height: 682rpx;
     margin: 20rpx 40rpx;
