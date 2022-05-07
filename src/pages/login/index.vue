@@ -117,9 +117,9 @@ const {time, form, clearPhone, getCode, onsubmit} = loginService()
 }
 
 :deep(.van-field__left-icon) {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  //display: flex;
+  //justify-content: center;
+  //align-items: center;
 
   .icon {
     width: 32rpx;

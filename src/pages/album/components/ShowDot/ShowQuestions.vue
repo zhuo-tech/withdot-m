@@ -193,11 +193,11 @@ const form = reactive(formData)
           </view>
         </view>
 
-        <view v-if="item.type === QuestionTypeEnum.SAQ">
+        <view v-if="item.type === QuestionTypeEnum.SAQ" class="answer">
           <view class="question">{{ item.label }}</view>
           <van-field v-model="form[index].currentAnswer" label="答案" placeholder="请填写简答题内容"></van-field>
         </view>
-        <view v-if="item.type === QuestionTypeEnum.TIANKONG">
+        <view v-if="item.type === QuestionTypeEnum.TIANKONG" class="answer">
           <view class="question">{{ item.label }}</view>
           <van-field v-for="(i,ind) in item.content"
                      :key="ind"
@@ -205,7 +205,7 @@ const form = reactive(formData)
                      label="答案"
                      placeholder="请输入对应填空题内容"></van-field>
         </view>
-        <view v-if="item.type === QuestionTypeEnum.XUANZE">
+        <view v-if="item.type === QuestionTypeEnum.XUANZE" class="answer">
           <view class="question">{{ item.label }}</view>
           <van-field v-for="(i,ind) in item.content" :key="ind" name="checkBox">
             <template #input>
@@ -251,7 +251,7 @@ const form = reactive(formData)
         <view>{{ numberOfCorrectAnswers }}</view>
         <view>答对</view>
       </view>
-      <view>
+      <view style="margin-left: 40rpx">
         <view>{{ data.config.exam.length - numberOfCorrectAnswers }}</view>
         <view>答错</view>
       </view>
@@ -325,7 +325,7 @@ const form = reactive(formData)
   word-wrap: break-word;
   word-break: break-all;
   white-space: pre-line;
-  color: rgba(47, 63, 90, 1)
+  color: rgba(47, 63, 90, 1);
 }
 
 .button {
@@ -349,11 +349,15 @@ const form = reactive(formData)
   top: 50%;
   transform: translate(-50%, -50%);
   width: 500rpx;
-  height: 600rpx;
+  max-height: 50vh;
   pointer-events: auto;
   border-radius: 30rpx;
   z-index: 100;
   padding: 78rpx 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   .top {
     display: flex;
@@ -368,10 +372,10 @@ const form = reactive(formData)
   .main {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
     color: rgba(51, 51, 51, 1);
     font-size: 40rpx;
-    margin-top: 200rpx;
+    margin-top: 40rpx;
 
     > view {
       > view:nth-of-type(1) {
@@ -388,12 +392,13 @@ const form = reactive(formData)
     border: 1px solid #c3d7ff;
     color: #287dd9;
     font-size: 40rpx;
-    margin-top: 178rpx;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
+    margin-top: 40rpx;
     text-align: center;
     line-height: 78rpx;
   }
+}
+
+.answer {
+  min-height: 30vh;
 }
 </style>

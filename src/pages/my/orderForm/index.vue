@@ -11,7 +11,7 @@ const {orderList, toDetail} = orderFormService()
 
     <view v-for="(item,index) in orderList" :key="index" class="item" @click="toDetail(item._id)">
       <view>
-        <image :src="videoAddress(item.album.coverHref)" mode="aspectFit"></image>
+        <image :src="videoAddress(item.album.coverHref)" mode="aspectFill"></image>
       </view>
       <view>{{ item.album.title }}</view>
       <view>￥:{{ item.amount }}</view>
