@@ -2,7 +2,10 @@
 import { CoreDot } from '@/model/entity/CoreDot'
 import { reactive, ref } from 'vue'
 import { QuestionTypeEnum } from '@/model/QuestionTypeEnum'
-
+type AnswerType = {
+  type: string,
+  answer: []
+}
 const props = defineProps<{
   data: CoreDot
 }>()
@@ -17,6 +20,11 @@ const countdownTime = ref()
 
 const visible = ref(true)
 
+const numberOfCorrectAnswers = ref<number>(0)
+
+//答题完成统计盒子 显示隐藏
+const finishBox = ref(false)
+
 props.data.config.exam.forEach((item: any, index: number) => {
   switch (item.type) {
     case QuestionTypeEnum.SAQ:
@@ -26,7 +34,7 @@ props.data.config.exam.forEach((item: any, index: number) => {
       }
       break
     case QuestionTypeEnum.XUANZE:
-      let options: Record<number, any> = {}
+      let options: Record<number, any> = []
       item.content.forEach((item: any, index: number) => {
         options[index] = false
       })
@@ -36,7 +44,7 @@ props.data.config.exam.forEach((item: any, index: number) => {
       }
       break
     case QuestionTypeEnum.TIANKONG:
-      let blank: Record<number, any> = {}
+      let blank: Record<number, any> = []
       item.content.forEach((item: any, index: number) => {
         blank[index] = ''
       })
@@ -65,7 +73,6 @@ const uponQuestion = () => {
 }
 
 const judgmentDot = () => {
-  console.log(props.data.config, '打点参数')
   const {pause, time, switch: stopTime} = props.data.config
   pause ? emits('videoStop') : null
   if (stopTime) {
@@ -88,13 +95,71 @@ const countdown = (time: number) => {
 
 const submit = () => {
   alearySumbit()
-  overlay.value = false
   visible.value = false
   emits('videoPlay')
+  let answer: any = []
+  props.data.config.exam.forEach((item: any) => {
+    let question: AnswerType = {
+      type: item.type,
+      answer: item.content,
+    }
+    answer.push(question)
+  })
+
+  answer?.forEach((item: any, index: number) => {
+    switch (item.type) {
+      case QuestionTypeEnum.TIANKONG:
+        judgeFillInTheBlankQuestions(item, index)
+        break
+      case QuestionTypeEnum.XUANZE:
+        judgmentMultipleChoice(item, index)
+        break
+      case QuestionTypeEnum.SAQ:
+        addCount()
+        break
+      default:
+    }
+  })
+  finishBox.value = true
+}
+
+//判断选择题是否正确
+const judgmentMultipleChoice = (item: any, index: number) => {
+  for (let i = 0; i < item.answer.length; i++) {
+    if (item.answer[i].value !== form[index].currentAnswer[i]) {
+      return
+    }
+  }
+  addCount()
+}
+
+//判断填空题题是否正确
+
+const judgeFillInTheBlankQuestions = (item: any, index: number) => {
+  console.log(item, index, '填空题')
+  for (let i = 0; i < item.answer.length; i++) {
+    if (item.answer[i].answer !== form[index].currentAnswer[i]) {
+      return
+    }
+  }
+  addCount()
+}
+
+//如果答题正确 答对数量加1
+const addCount = () => {
+  if (numberOfCorrectAnswers.value >= props.data.config.exam) {
+    return
+  }
+  numberOfCorrectAnswers.value++
 }
 
 const alearySumbit = () => {
   emits('addParameters', props.data._id)
+}
+
+const sureQuestion = () => {
+  overlay.value = false
+  finishBox.value = false
 }
 
 judgmentDot()
@@ -165,6 +230,25 @@ const form = reactive(formData)
       </van-row>
 
     </van-form>
+  </view>
+  <view :class="finishBox ? 'finishQuestion':''">
+    <view class="top">
+      <view>
+        <img alt="" src="../../../../static/question/face.png" srcset="">
+      </view>
+      <view>恭喜你, 完成了考试</view>
+    </view>
+    <view class="main">
+      <view>
+        <view>{{ numberOfCorrectAnswers }}</view>
+        <view>答对</view>
+      </view>
+      <view>
+        <view>{{ data.config.exam.length - numberOfCorrectAnswers }}</view>
+        <view>答错</view>
+      </view>
+    </view>
+    <view class="questionBth" @click="sureQuestion">确定</view>
   </view>
 </template>
 
@@ -248,5 +332,60 @@ const form = reactive(formData)
 
 .closeBox {
   display: none;
+}
+
+.finishQuestion {
+  background-color: #FFFFFF;
+  position: fixed !important;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 500rpx;
+  pointer-events: auto;
+  border-radius: 30rpx;
+  z-index: 100;
+  min-height: 40vh;
+  padding: 78rpx 0;
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > view:nth-of-type(2) {
+      margin-left: 20rpx;
+    }
+  }
+
+  .main {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: rgba(51, 51, 51, 1);
+    font-size: 40rpx;
+    margin-top: 200rpx;
+
+    > view {
+      > view:nth-of-type(1) {
+        font-size: 56rpx;
+        text-align: center;
+      }
+    }
+  }
+
+  .questionBth {
+    width: 382rpx;
+    height: 78rpx;
+    border-radius: 50rpx;
+    border: 1px solid #c3d7ff;
+    color: #287dd9;
+    font-size: 40rpx;
+    margin-top: 178rpx;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+    line-height: 78rpx;
+  }
 }
 </style>

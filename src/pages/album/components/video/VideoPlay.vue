@@ -28,7 +28,7 @@ import { videoService } from '@/pages/album/hooks/videoService'
 import { CoreDotType } from '@/model/entity/CoreDot'
 import Dot from '../Dot'
 import { videoAddress } from '@/utils/video'
-import { computed, watch } from 'vue'
+import { watch } from 'vue'
 
 const {
   videoButton,
