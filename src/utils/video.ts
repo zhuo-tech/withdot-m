@@ -1,4 +1,4 @@
-const videoHttp: string = 'https://7dd2f8e8-6102-492c-a522-b5a7db2ab00a.lafyun.com/file'
+const videoHttp: string = 'https://oss.lafyun.com/7dd2f8e8-6102-492c-a522-b5a7db2ab00a'
 
 /**
  * 视频地址拼接
@@ -6,6 +6,10 @@ const videoHttp: string = 'https://7dd2f8e8-6102-492c-a522-b5a7db2ab00a.lafyun.c
  * @returns {string}
  */
 export function videoAddress(url: string): string {
-    return !!url ? videoHttp + url : ''
+    if (!url) {
+        return ''
+    }
+
+    return videoHttp + '-' + url.slice(1)
 }
 

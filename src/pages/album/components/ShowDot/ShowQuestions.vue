@@ -2,6 +2,7 @@
 import { CoreDot } from '@/model/entity/CoreDot'
 import { reactive, ref } from 'vue'
 import { QuestionTypeEnum } from '@/model/QuestionTypeEnum'
+
 type AnswerType = {
   type: string,
   answer: []
