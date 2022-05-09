@@ -49,6 +49,18 @@
 					"titleNView": false
 				}
 			}
+		},
+		{
+			"path": "pages/album/noPayAlbum",
+			"style": {
+				"navigationBarTitleText": "专辑"
+			}
+		},
+		{
+			"path": "pages/pay/index",
+			"style": {
+				"navigationBarTitleText": "订单确认"
+			}
 		}
 	],
 	"globalStyle": {

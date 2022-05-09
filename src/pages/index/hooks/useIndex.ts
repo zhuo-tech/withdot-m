@@ -1,6 +1,6 @@
 import { getAlbumListApi } from '@/api/home/index'
 import { CoreAlbum } from '@/model/entity/CoreAlbum'
-import { whetherToLogIn } from '@/utils/token'
+import { judgmentLoginPay, whetherToLogIn } from '@/utils/token'
 import { onReachBottom } from '@dcloudio/uni-app'
 import { Notify } from 'vant'
 import { Ref, ref } from 'vue'
@@ -36,9 +36,8 @@ export function useIndex(): ReturnType {
             }).catch(err => Notify({type: 'danger', message: err.toString()}))
     }
 
-    const toAlbum = (albumId: string) => {
-        const path = `/pages/album/index?albumId=${ albumId }`
-        whetherToLogIn(path)
+    const toAlbum = (goodsId: string) => {
+        judgmentLoginPay(goodsId).then()
     }
 
     // 触底加载

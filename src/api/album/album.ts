@@ -10,10 +10,23 @@ import { LogicDelete } from '@/model/LogicDelete'
 export async function getAlbumWorklApi(albumId: string) {
     const res = await DB.collection(CoreAlbum.TABLE_NAME)
         .where({
-            _id:albumId,
+            _id: albumId,
             delFlag: LogicDelete.NORMAL,
         })
         .getOne()
+    if (!res.ok) {
+        throw new Error(res.error)
+    }
+    return res.data
+}
+
+export async function getAlbumDetailApi(_id: string): Promise<CoreAlbum> {
+    const res = await DB.collection(CoreAlbum.TABLE_NAME)
+        .where({
+            _id,
+            delFlag: LogicDelete.NORMAL,
+        })
+        .getOne<CoreAlbum>()
     if (!res.ok) {
         throw new Error(res.error)
     }

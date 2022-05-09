@@ -1,3 +1,4 @@
+import { determineWhetherToPay } from '@/api/order/orderApi'
 import { Dialog } from 'vant'
 
 export function setToken(token: any) {
@@ -32,4 +33,29 @@ export function getUserInfo() {
         return
     }
     return uni.getStorageSync('user-info')
+}
+
+/**
+ * 判断用户是否登录,登录后专辑是否购买
+ * @param {string} goodsId 专辑id
+ * @returns {Promise<void>}
+ */
+export async function judgmentLoginPay(goodsId: string) {
+    if (getToken()) {
+        const {_id} = getUserInfo()
+        const whetherPay = await determineWhetherToPay(_id, goodsId)
+        if (whetherPay) {
+            uni.navigateTo({url: `/pages/album/index?albumId=${ goodsId }`})
+            return
+        }
+        uni.navigateTo({url: `/pages/album/noPayAlbum?albumId=${ goodsId }`})
+        return
+    }
+    Dialog.confirm({
+            title: '提示',
+            message: '您还没有登陆',
+        })
+        .then(() => uni.navigateTo({url: '/pages/login/index'}))
+        .catch(() => {
+        })
 }
