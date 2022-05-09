@@ -1,7 +1,9 @@
+import { getAlbumDetailApi } from '@/api/album/album'
 import { cloud, DB } from '@/config/cloud'
 import { CoreAlbum } from '@/model/entity/CoreAlbum'
 import { PayGoodsOrder } from '@/model/entity/PayGoodsOrder'
 import { LogicDelete } from '@/model/LogicDelete'
+import { Notify } from 'vant'
 
 export async function getOrderListApi(id: string) {
     const res = await DB.collection(PayGoodsOrder.TABLE_NAME)
@@ -77,12 +79,16 @@ export async function purchasedAlbumListApi(id: string) {
 }
 
 /**
- * 判断专辑是否支付
+ * 判断专辑是否支付 如果商品价格为0 表示免费 可以直接跳转进专辑页面
  * @param {string} userId 用户id
  * @param {string} goodsId 专辑id
  * @returns {Promise<boolean>}
  */
 export async function determineWhetherToPay(userId: string, goodsId: string): Promise<Boolean> {
+    const priceRes: CoreAlbum = await getAlbumDetailApi(goodsId)
+    if (!priceRes.sellingPrice || priceRes.sellingPrice === '0' || priceRes.sellingPrice === undefined) {
+        return true
+    }
     const res = await DB.collection(PayGoodsOrder.TABLE_NAME)
         .where({
             userId,

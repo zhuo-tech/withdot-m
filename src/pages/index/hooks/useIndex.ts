@@ -36,8 +36,8 @@ export function useIndex(): ReturnType {
             }).catch(err => Notify({type: 'danger', message: err.toString()}))
     }
 
-    const toAlbum = (goodsId: string) => {
-        judgmentLoginPay(goodsId).then()
+    const toAlbum = async (goodsId: string) => {
+        await judgmentLoginPay(goodsId)
     }
 
     // 触底加载
