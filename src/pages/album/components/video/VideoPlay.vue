@@ -3,13 +3,13 @@
     <!--video原视频容器-->
     <video id="myVideo"
            :controls="videoButton"
-           :show-center-play-btn="videoButton"
            :enable-progress-gesture="videoButton"
+           :show-center-play-btn="videoButton"
            :show-fullscreen-btn="videoButton"
            :src="videoAddress(videoData.materialData?.href)"
            autoplay
            @fullscreenchange="videoFullScreen"
-           @timeupdate="currentTime">
+           @timeupdate="(event)=>{currentTime(event);tryWatch(event,albumId)}">
       <cover-view>
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
           <view v-for="(item,index) in currentDot" :key="index">
@@ -42,11 +42,15 @@ const {
   videoPlay,
   videoDisableOperation,
   startVideoBUtton,
+  tryWatch,
 } = videoService()
 
 //传来的作品_id
 const props = defineProps({
   workId: {
+    type: String,
+  },
+  albumId: {
     type: String,
   },
 })
@@ -64,7 +68,7 @@ const videoFullScreen = () => {
  * 监听作品_id变化切换视频数据
  */
 watch(() => props.workId, () => {
-  getVideoData(props.workId as string)
+  getVideoData(props.workId as string, props.albumId as string)
 })
 
 watch(() => videoData.value.materialData?.href, () => {

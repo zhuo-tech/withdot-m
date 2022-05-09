@@ -79,7 +79,7 @@ export async function purchasedAlbumListApi(id: string) {
 }
 
 /**
- * 判断专辑是否支付 如果商品价格为0 表示免费 可以直接跳转进专辑页面
+ * 判断专辑是否支付 如果专辑价格为0 表示免费 可以直接跳转进专辑页面
  * @param {string} userId 用户id
  * @param {string} goodsId 专辑id
  * @returns {Promise<boolean>}

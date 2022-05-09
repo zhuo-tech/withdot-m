@@ -1,6 +1,8 @@
 import { VideoDataType, VideoFun } from '@/api/album/videoApi'
+import { determineWhetherToPay } from '@/api/order/orderApi'
 import { CoreDot } from '@/model/entity/CoreDot'
-import { Notify } from 'vant'
+import { getUserInfo } from '@/utils/token'
+import { Dialog, Notify } from 'vant'
 import { ref } from 'vue'
 
 export function videoService() {
@@ -26,8 +28,8 @@ export function videoService() {
      * 获得视频数据
      * @returns {Promise<void>}
      */
-    const getVideoData = async (workId: string) => {
-        await VideoFun().getVideoFun(workId).then((response: any) => {
+    const getVideoData = async (workId: string, albumId: string) => {
+        await VideoFun().getVideoFun(workId, albumId).then((response: any) => {
             videoData.value = response
             dotDate.value = response.dotData
             dataProcessing()
@@ -94,6 +96,32 @@ export function videoService() {
     const startVideoBUtton = () => {
         videoButton.value = true
     }
+
+    const tryWatch = async (event: any, albumId: string) => {
+        const {currentTime} = event.detail
+        //0  收费
+        const {_id} = getUserInfo()
+        const isPay = await determineWhetherToPay(_id, albumId)
+        if (isPay) {
+            return
+        }
+        if (videoData.value.isFree === 0) {
+            if (currentTime >= videoData.value.trialTime) {
+                vieoStop()
+                Dialog.confirm({
+                        title: '付费作品',
+                        message:
+                            '该作品为收费作品,试看时间已结束。',
+                    })
+                    .then(() => {
+                        uni.navigateTo({url: `/pages/pay/index?albumId=${ albumId }`})
+                    })
+                    .catch(() => {
+                        uni.switchTab({url: '/pages/index/index'})
+                    })
+            }
+        }
+    }
     return {
         videoContext,
         videoButton,
@@ -108,5 +136,6 @@ export function videoService() {
         videoPlay,
         videoDisableOperation,
         startVideoBUtton,
+        tryWatch,
     }
 }
