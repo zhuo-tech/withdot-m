@@ -38,6 +38,9 @@ export function albumService() {
         uni.navigateTo({url: `/pages/pay/index?albumId=${ albumId }`})
     }
 
+    const toAlbum = (albumId: string) => {
+        uni.navigateTo({url: `/pages/album/index?albumId=${ albumId }`})
+    }
 
     onLoad((options) => {
         albumId.value = options.albumId as string
@@ -52,5 +55,6 @@ export function albumService() {
         albumDetail,
         toPay,
         albumId,
+        toAlbum,
     }
 }

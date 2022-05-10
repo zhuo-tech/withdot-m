@@ -1,9 +1,11 @@
 <template>
   <view>
-    <view class="top">
-      <van-cell-group inset style="border-radius: 100rpx">
+    <view class="search">
+      <van-cell-group inset>
         <van-field v-model="searchWord" left-icon="search" placeholder="搜索" @update:model-value="search" />
       </van-cell-group>
+    </view>
+    <view class="top">
       <image mode="aspectFill" src="../../static/树.png"></image>
     </view>
     <view class="content">
@@ -35,9 +37,24 @@ getAlbumList()
 </script>
 
 <style lang="less" scoped>
+.search {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  background-color: #0D79FF;
+
+  .van-cell-group {
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+    border-radius: 100rpx;
+  }
+}
+
 .top {
   width: 100%;
   height: 428rpx;
+  margin-top: 120rpx;
   background: linear-gradient(to top, #ffffff, #0D79FF);
 
   > image {

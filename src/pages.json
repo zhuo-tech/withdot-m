@@ -3,10 +3,9 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页",
-				"navigationBarBackgroundColor": "#0D79FF",
-				"navigationBarTextStyle": "#FFFFFF",
-				"enablePullDownRefresh": true
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
 		{
@@ -14,7 +13,10 @@
 			"style": {
 				"navigationBarTitleText": "我的",
 				"navigationBarBackgroundColor": "#0D79FF",
-				"navigationBarTextStyle": "#FFFFFF"
+				"navigationBarTextStyle": "#FFFFFF",
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
 		{

@@ -2,7 +2,7 @@
 import { videoAddress } from '@/utils/video'
 import { albumService } from '@/pages/album/hooks/albumService'
 
-const {albumDetail, albumWork, toPay} = albumService()
+const {albumDetail, albumWork, toPay, toAlbum} = albumService()
 </script>
 
 <template>
@@ -43,7 +43,7 @@ const {albumDetail, albumWork, toPay} = albumService()
       </van-tab>
     </van-tabs>
     <view class="bth">
-      <view>试看</view>
+      <view @click="toAlbum(albumDetail._id)">试看</view>
       <view @click="toPay(albumDetail._id)">立即购买</view>
     </view>
   </view>
