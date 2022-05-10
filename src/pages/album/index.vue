@@ -2,7 +2,7 @@
   <view class="box">
     <view v-if="!albumWork || albumWork.length ===0 " class="nodata">该专辑还未添加作品</view>
     <view v-else>
-      <VideoPlay :albumId="albumId" :workId="work_id"></VideoPlay>
+      <VideoPlay :albumId="albumId" :workId="workId"></VideoPlay>
       <view class="course">
         <view class="title">课程目录</view>
         <view v-for="(item,index) in albumWork" :key="index" class="content" @click="playVideo(item._id)">
@@ -22,7 +22,7 @@
 import VideoPlay from './components/video/VideoPlay.vue'
 import { albumService } from '@/pages/album/hooks/albumService'
 
-const {work_id, albumWork, playVideo, albumId} = albumService()
+const {workId, albumWork, playVideo, albumId} = albumService()
 
 </script>
 

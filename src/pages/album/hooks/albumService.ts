@@ -1,30 +1,17 @@
-import { getAlbumDetailApi, getAlbumWorklApi } from '@/api/album/album'
+import { getAlbumDetailApi } from '@/api/album/album'
 import { CoreAlbum } from '@/model/entity/CoreAlbum'
-import { CoreWork } from '@/model/entity/CoreWork'
-import { onLoad, onShow } from '@dcloudio/uni-app'
+import { onLoad } from '@dcloudio/uni-app'
 import { Notify } from 'vant'
-import { ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 
 export function albumService() {
-    const albumWork = ref<CoreWork[]>()
-
-    const work_id = ref('')
-
-    const albumId = ref('')
-
     const albumDetail = ref<CoreAlbum>({} as CoreAlbum)
+    const albumWork = computed(() => albumDetail.value.workList)
+    const albumId = computed(() => albumDetail.value._id)
 
-    const getAblumWorkList = (albumId: string) => {
-        getAlbumWorklApi(albumId).then(response => {
-            albumWork.value = response?.workList
-        }).catch(err => {
-            Notify({type: 'danger', message: err.toString()})
-        })
-    }
+    const workId = ref('')
 
-    const playVideo = (workId: string) => {
-        work_id.value = workId
-    }
+    const playVideo = (id: string) => workId.value = id
 
     const getAlbumDetail = (_id: string) => {
         getAlbumDetailApi(_id).then(res => {
@@ -42,15 +29,10 @@ export function albumService() {
         uni.navigateTo({url: `/pages/album/index?albumId=${ albumId }`})
     }
 
-    onLoad((options) => {
-        albumId.value = options.albumId as string
-        getAlbumDetail(options.albumId as string)
-        getAblumWorkList(options.albumId as string)
-    })
+    onLoad((options) => getAlbumDetail(options.albumId as any))
     return {
         albumWork,
-        work_id,
-        getAblumWorkList,
+        workId,
         playVideo,
         albumDetail,
         toPay,
