@@ -8,9 +8,9 @@
         <view v-for="(item,index) in albumWork" :key="index" class="content" @click="playVideo(item._id)">
           <view>
             <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
-            <view class="size">时长
-              <span>30:01</span>
-            </view>
+            <!--<view class="size">时长-->
+            <!--  <span>30:01</span>-->
+            <!--</view>-->
           </view>
         </view>
       </view>
@@ -46,7 +46,7 @@ const {work_id, albumWork, playVideo, albumId} = albumService()
 
     .content {
       width: 100%;
-      height: 100rpx;
+      height: 60rpx;
       padding: 22rpx 0 14rpx 0;
 
       .contentName {

@@ -18,7 +18,7 @@ export class CoreQuestionRepo implements BaseEntity {
     /**
      * 题目内容；富文本
      */
-    public content?: string
+    public content?: string | Array<any>
     /**
      * 题目类型
      * select 选择; JUDGE 判断题; SAQ 简单题

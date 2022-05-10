@@ -28,6 +28,7 @@ export class CoreExam implements BaseEntity {
      */
     endTime?: number
 
+    content?: string | Array<any>
     /**
      * 试题
      */

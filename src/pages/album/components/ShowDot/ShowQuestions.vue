@@ -1,5 +1,10 @@
 <script lang="ts" setup>
+import { examLogApi } from '@/api/album/examLog'
 import { CoreDot } from '@/model/entity/CoreDot'
+import { CoreExam } from '@/model/entity/CoreExam'
+import { CoreQuestionRepo } from '@/model/entity/CoreQuestionRepo'
+import { AnswerLog } from '@/model/entity/CoreStudentExamLog'
+import { Notify } from 'vant'
 import { reactive, ref } from 'vue'
 import { QuestionTypeEnum } from '@/model/QuestionTypeEnum'
 
@@ -121,7 +126,7 @@ const submit = () => {
     }
     answer.push(question)
   })
-
+  console.log('答题数据', props.data.config.exam)
   answer?.forEach((item: any, index: number) => {
     switch (item.type) {
       case QuestionTypeEnum.TIANKONG:
@@ -135,8 +140,46 @@ const submit = () => {
         break
       default:
     }
+
   })
+  studentExamLog()
   finishBox.value = true
+}
+
+const studentExamLog = () => {
+  const data = props.data.config.exam
+  let answerLogs: AnswerLog[] = data.map((item: CoreExam, index: number) => {
+    const newData: any = {}
+    newData.quId = item._id
+    newData.quName = item.label as string
+    newData.quType = item.type as QuestionTypeEnum
+    if (item.type === QuestionTypeEnum.XUANZE) {
+      const list = item.content as any[]
+      newData.options = list.map(i => {
+        return i.answer
+      })
+      newData.originAnswer = list.map(i => {
+        return i.value
+      })
+    }
+    if (item.type === QuestionTypeEnum.TIANKONG) {
+      const list = item.content as any[]
+      newData.originAnswer = list.map(i => {
+        return i.answer
+      })
+    }
+    if (item.type === QuestionTypeEnum.SAQ) {
+      newData.currentAnswer = form[index].currentAnswer
+    } else {
+      newData.currentAnswer = Object.values(form[index].currentAnswer)
+    }
+
+    return newData
+  })
+
+  examLogApi(props.data._id, props.data.workId, answerLogs).then().catch(err => {
+    Notify(err.toString())
+  })
 }
 
 //判断选择题是否正确

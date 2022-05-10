@@ -5,7 +5,7 @@ import { QuestionTypeEnum } from "../QuestionTypeEnum";
  * 学员考试记录
  */
 export default class CoreStudentExamLog implements BaseEntity {
-    
+
     public static readonly TABLE_NAME = 'core_student_exam_log'
 
     /**
@@ -83,7 +83,7 @@ export class AnswerLog {
      * label: 名称
      * value: 分数
      */
-    options: [{ label: string, value?: number }]
+    options: [{ label: string }]
 
     /**
      * 正确答案
