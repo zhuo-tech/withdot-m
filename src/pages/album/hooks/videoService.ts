@@ -1,6 +1,8 @@
-import { VideoDataType, VideoFun } from '@/api/album/videoApi'
+import { hisVodApi, VideoDataType, VideoFun } from '@/api/album/videoApi'
 import { determineWhetherToPay } from '@/api/order/orderApi'
 import { CoreDot } from '@/model/entity/CoreDot'
+import { debounce } from '@/utils/debounce'
+import { throttle } from '@/utils/throttle'
 import { getUserInfo } from '@/utils/token'
 import { Dialog, Notify } from 'vant'
 import { ref } from 'vue'
@@ -122,6 +124,14 @@ export function videoService() {
             }
         }
     }
+
+    const debounceHisVodApi = throttle(hisVodApi, 2000)
+
+    const hisVod = (event: any, albumId: string, workId: string) => {
+        const {currentTime} = event.detail
+        debounceHisVodApi(currentTime, albumId, workId)
+    }
+
     return {
         videoContext,
         videoButton,
@@ -137,5 +147,6 @@ export function videoService() {
         videoDisableOperation,
         startVideoBUtton,
         tryWatch,
+        hisVod,
     }
 }

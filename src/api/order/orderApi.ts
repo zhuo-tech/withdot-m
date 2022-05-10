@@ -89,6 +89,7 @@ export async function determineWhetherToPay(userId: string, goodsId: string): Pr
     if (!priceRes.sellingPrice || priceRes.sellingPrice === '0' || priceRes.sellingPrice === undefined) {
         return true
     }
+    console.log(4444444444444444444444444)
     const res = await DB.collection(PayGoodsOrder.TABLE_NAME)
         .where({
             userId,

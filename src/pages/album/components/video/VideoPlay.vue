@@ -9,7 +9,7 @@
            :src="videoAddress(videoData.materialData?.href)"
            autoplay
            @fullscreenchange="videoFullScreen"
-           @timeupdate="(event)=>{currentTime(event);tryWatch(event,albumId)}">
+           @timeupdate="(event)=>{currentTime(event);tryWatch(event,albumId);hisVod(event,albumId,workId)}">
       <cover-view>
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
           <view v-for="(item,index) in currentDot" :key="index">
@@ -43,6 +43,7 @@ const {
   videoDisableOperation,
   startVideoBUtton,
   tryWatch,
+  hisVod,
 } = videoService()
 
 //传来的作品_id
@@ -78,6 +79,7 @@ watch(() => videoData.value.materialData?.href, () => {
     startVideoBUtton()
   }
 }, {immediate: true})
+
 </script>
 
 <style lang="less" scoped>
