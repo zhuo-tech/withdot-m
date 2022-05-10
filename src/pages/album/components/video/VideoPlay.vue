@@ -1,5 +1,5 @@
 <template>
-  <view class="box">
+<view class="box">
     <!--video原视频容器-->
     <video id="myVideo"
            :controls="videoButton"
@@ -9,76 +9,57 @@
            :src="videoAddress(videoData.materialData?.href)"
            autoplay
            @fullscreenchange="videoFullScreen"
-           @timeupdate="(event)=>{currentTime(event);tryWatch(event,albumId);hisVod(event,albumId,workId)}">
-      <cover-view>
-        <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
-          <view v-for="(item,index) in currentDot" :key="index">
-            <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
-              <Dot :data="item" :videoScreen="videoScreen" @addParameters="addParameters" @videoPlay="videoPlay" @videoStop="vieoStop" />
-            </teleport>
-          </view>
-        </view>
-      </cover-view>
+           @timeupdate="videoTimeUpdate">
+        <cover-view>
+            <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
+                <view v-for="(item,index) in currentDot" :key="index">
+                    <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
+                        <Dot :data="item" :videoScreen="videoScreen" @addParameters="addParameters" @videoPlay="videoPlay" @videoStop="videoStop" />
+                    </teleport>
+                </view>
+            </view>
+        </cover-view>
     </video>
-  </view>
+</view>
 </template>
 
 <script lang="ts" setup>
-import { videoService } from '@/pages/album/hooks/videoService'
 import { CoreDotType } from '@/model/entity/CoreDot'
-import Dot from '../Dot'
+import { videoService } from '@/pages/album/hooks/videoService'
 import { videoAddress } from '@/utils/video'
-import { watch } from 'vue'
-
-const {
-  videoButton,
-  videoScreen,
-  videoData,
-  getVideoData,
-  currentDot,
-  currentTime,
-  addParameters,
-  vieoStop,
-  videoPlay,
-  videoDisableOperation,
-  startVideoBUtton,
-  tryWatch,
-  hisVod,
-} = videoService()
+import Dot from '../Dot'
 
 //传来的作品_id
 const props = defineProps({
-  workId: {
-    type: String,
-  },
-  albumId: {
-    type: String,
-  },
+    workId: {
+        type: String,
+        required: true,
+    },
+    albumId: {
+        type: String,
+        required: true,
+    },
 })
+
+const {
+    videoButton,
+    videoScreen,
+    videoData,
+    currentDot,
+    addParameters,
+    videoStop,
+    videoPlay,
+    videoTimeUpdate,
+} = videoService('myVideo', props)
+
 
 /**
  * 当视频进入和退出全屏时触发
  */
 const videoFullScreen = () => {
-  screen.orientation.lock('landscape')
-  videoScreen.value = !videoScreen.value
-  console.log(videoScreen.value)
+    screen.orientation.lock('landscape')
+    videoScreen.value = !videoScreen.value
 }
-
-/**
- * 监听作品_id变化切换视频数据
- */
-watch(() => props.workId, () => {
-  getVideoData(props.workId as string, props.albumId as string)
-})
-
-watch(() => videoData.value.materialData?.href, () => {
-  if (!videoData.value.materialData?.href) {
-    videoDisableOperation()
-  } else {
-    startVideoBUtton()
-  }
-}, {immediate: true})
 
 </script>
 

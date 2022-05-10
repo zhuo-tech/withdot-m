@@ -1,29 +1,27 @@
-import { CoreAlbum, CoreAlbumWork } from '@/model/entity/CoreAlbum'
+import { cloud } from '@/config/cloud'
+import { CoreAlbumWork } from '@/model/entity/CoreAlbum'
 import { CoreDot } from '@/model/entity/CoreDot'
 import CoreMaterial from '@/model/entity/CoreMaterial'
 import { CoreWork } from '@/model/entity/CoreWork'
-import { cloud } from '@/config/cloud'
 import { HisVodRecord } from '@/model/HisVodRecord'
 import { getUserInfo } from '@/utils/token'
 
 const DB = cloud.database()
-export type VideoDataType = CoreWork & { dotData: CoreDot, materialData: CoreMaterial } & CoreAlbumWork
 
-export function VideoFun() {
+export type VideoDataType = CoreWork
+    & Pick<CoreAlbumWork, 'isFree' | 'trialTime'>
+    & {
+    materialData: CoreMaterial,
+    dotData: Array<CoreDot>
+}
 
-    /**
-     * 根据作品_id 查询作品素材视频 打点数据
-     * @param {string} workId  作品_id
-     * @param albumId  专辑_id
-     * @returns {Promise<CoreWork[]>}
-     */
-    const getVideoFun = async (workId: string, albumId: string) => {
-        return await cloud.invokeFunction('app-video-data', {workId, albumId})
-    }
-
-    return {
-        getVideoFun,
-    }
+/**
+ * 根据作品_id 查询作品素材视频 打点数据
+ * @param {string} workId  作品_id
+ * @param albumId  专辑_id
+ */
+export function getVideoData(workId: string, albumId: string): Promise<VideoDataType> {
+    return cloud.invokeFunction<VideoDataType>('app-video-data', {workId, albumId})
 }
 
 /**

@@ -1,152 +1,115 @@
-import { hisVodApi, VideoDataType, VideoFun } from '@/api/album/videoApi'
+import { getVideoData, hisVodApi, VideoDataType } from '@/api/album/videoApi'
 import { determineWhetherToPay } from '@/api/order/orderApi'
+import { CoreAlbumWork } from '@/model/entity/CoreAlbum'
 import { CoreDot } from '@/model/entity/CoreDot'
-import { debounce } from '@/utils/debounce'
 import { throttle } from '@/utils/throttle'
 import { getUserInfo } from '@/utils/token'
 import { Dialog, Notify } from 'vant'
-import { ref } from 'vue'
+import { ExtractPropTypes, ref, watch } from 'vue'
 
-export function videoService() {
-    //视频实例
-    const videoContext = uni.createVideoContext('myVideo')
+type PropsType = Readonly<ExtractPropTypes<{ workId: { type: StringConstructor, required: true }, albumId: { type: StringConstructor, required: true } }>>
 
-    //视频控件(是否显示默认播放控件（播放/暂停按钮、播放进度、时间）,是否显示全屏按钮.是否显示视频中间的播放按钮)
-    const videoButton = ref(true)
-
-    //绑定video是否全屏
+export function videoService(videoId: string, props: PropsType) {
+    // 视频实例
+    const videoContext = uni.createVideoContext(videoId)
+    // 视频控件(是否显示默认播放控件（播放/暂停按钮、播放进度、时间）,是否显示全屏按钮.是否显示视频中间的播放按钮)
+    const videoButton = ref(false)
+    // 绑定video是否全屏
     const videoScreen = ref(false)
 
-    //视频数据
-    let videoData = ref<VideoDataType>({} as VideoDataType)
-
-    //视频打点数据
+    // 视频数据
+    let videoData = ref<VideoDataType>({} as any)
+    // 视频打点数据 (videoData 的视图)
     let dotDate = ref<CoreDot[]>([])
-
-    //当前打点数据
+    // 当前打点数据
     const currentDot = ref<CoreDot[]>([])
+    // 是否试看
+    const isTry = ref(true)
 
-    /**
-     * 获得视频数据
-     * @returns {Promise<void>}
-     */
-    const getVideoData = async (workId: string, albumId: string) => {
-        await VideoFun().getVideoFun(workId, albumId).then((response: any) => {
-            videoData.value = response
-            dotDate.value = response.dotData
-            dataProcessing()
-        }).catch((err: any) => {
-            Notify({type: 'danger', message: err.toString()})
-        })
-    }
-
-    /**
-     * 处理打点数据 是否已经展示guole alreadyShow:boolean
-     */
-    const dataProcessing = () => {
-        dotDate.value?.forEach(item => {
-            item.alreadyShow = false
-        })
-    }
-
-    /**
-     * 视频播放时时间变化 并过滤出 该时间的打点数据
-     * @param event
-     */
-    const currentTime = (event: any) => {
-        const {currentTime} = event.detail
-        currentDot.value = dotDate.value?.filter(
-            ({start, end, alreadyShow}) => currentTime >= start && currentTime <= (end ?? start) && !alreadyShow,
-        )
-    }
-
-    /**
-     * 修改打点参数 alreadyShow 已经展示过了
-     * @param {string} _id 打点的_id
-     */
-    const addParameters = (_id: string) => {
-        dotDate.value.forEach(item => {
-            if (item._id === _id) {
-                item.alreadyShow = true
-            }
-        })
-    }
-
-    /**
-     * 视频停止播放
-     */
-    const vieoStop = () => {
+    // 视频停止播放
+    const videoStop = () => {
         videoContext.pause()
-        videoDisableOperation()
-    }
-
-    /**
-     * 视频开始播放
-     */
-    const videoPlay = () => {
-        videoContext.play()
-        startVideoBUtton()
-    }
-
-    /**
-     * 视频禁用操作
-     */
-    const videoDisableOperation = () => {
         videoButton.value = false
     }
-
-    const startVideoBUtton = () => {
+    // 视频开始播放
+    const videoPlay = () => {
+        videoContext.play()
         videoButton.value = true
     }
 
-    const tryWatch = async (event: any, albumId: string) => {
-        const {currentTime} = event.detail
-        //0  收费
-        const {_id} = getUserInfo()
-        const isPay = await determineWhetherToPay(_id, albumId)
-        if (isPay) {
-            return
-        }
-        if (videoData.value.isFree === 0) {
-            if (currentTime >= videoData.value.trialTime) {
-                vieoStop()
-                Dialog.confirm({
-                        title: '付费作品',
-                        message:
-                            '该作品为收费作品,试看时间已结束。',
-                    })
-                    .then(() => {
-                        uni.navigateTo({url: `/pages/pay/index?albumId=${ albumId }`})
-                    })
-                    .catch(() => {
-                        uni.switchTab({url: '/pages/index/index'})
-                    })
-            }
-        }
+    // 初始化: 判断是否试看: 已购买 / 免费专辑, 无需试看
+    determineWhetherToPay(getUserInfo()._id, props.albumId)
+        .then(noChargeOrBought => isTry.value = !noChargeOrBought)
+
+    // 获得视频数据
+    const videoDataInit = (workId: string, albumId: string) => {
+        getVideoData(workId, albumId)
+            .then(res => {
+                videoData.value = res
+                dotDate.value = res.dotData
+                // 初始化打点状态 未展示: alreadyShow
+                dotDate.value?.forEach(item => item.alreadyShow = false)
+
+                // 如果视频URL不存在, 禁用 video 控制按钮
+                videoButton.value = !!videoData.value.materialData.href
+            }).catch((err: any) => {
+            Notify({type: 'danger', message: err.toString()})
+        })
     }
+    // 监听作品_id变化切换视频数据
+    watch(() => props.workId, () => videoDataInit(props.workId as string, props.albumId as string))
 
     const debounceHisVodApi = throttle(hisVodApi, 2000)
-
-    const hisVod = (event: any, albumId: string, workId: string) => {
-        const {currentTime} = event.detail
+    const hisVod = (currentTime: number, albumId: string, workId: string) => {
         debounceHisVodApi(currentTime, albumId, workId)
     }
 
     return {
-        videoContext,
         videoButton,
         videoScreen,
         videoData,
         dotDate,
-        getVideoData,
         currentDot,
-        currentTime,
-        addParameters,
-        vieoStop,
+        videoStop,
         videoPlay,
-        videoDisableOperation,
-        startVideoBUtton,
-        tryWatch,
-        hisVod,
+        /**
+         * 修改打点参数 alreadyShow 已经展示过了
+         * @param {string} _id
+         */
+        addParameters(_id: string) {
+            dotDate.value.forEach(item => {
+                if (item._id === _id) {
+                    item.alreadyShow = true
+                }
+            })
+        },
+        /**
+         * 视频播放回调
+         */
+        videoTimeUpdate(event: any) {
+            const {currentTime} = event.detail
+
+            // 视频播放时时间变化 并过滤出 该时间的打点数据
+            currentDot.value = dotDate.value?.filter(
+                ({start, end, alreadyShow}) => currentTime >= start && currentTime <= (end ?? start) && !alreadyShow,
+            )
+            if (isTry.value) {
+                const needPay = CoreAlbumWork.checkIsFree(videoData.value.isFree)
+                if (needPay && currentTime >= videoData.value.trialTime) {
+                    videoStop()
+                    popUp(props.albumId)
+                }
+            }
+            hisVod(currentTime, props.albumId, props.workId)
+        },
     }
+}
+
+function popUp(albumId: string) {
+    Dialog.confirm({
+            title: '付费作品',
+            message: '该作品为收费作品,试看时间已结束。',
+        })
+        .then(() => uni.navigateTo({url: `/pages/pay/index?albumId=${ albumId }`}))
+        .catch(() => uni.switchTab({url: '/pages/index/index'}))
 }

@@ -52,6 +52,9 @@ export class CoreDot<T extends CoreDotType = any> implements BaseEntity {
      */
     config: DotTypeConfigMapping[T]
 
+    /**
+     * 是否展示过了 视图属性
+     */
     alreadyShow: boolean
     createTime: number
     updateTime: number

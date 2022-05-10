@@ -65,6 +65,8 @@ export class CoreAlbumWork {
 
     /**
      * 是否免费默认否
+     * 0 收费
+     * 1 免费
      */
     public isFree: number
 
@@ -78,5 +80,14 @@ export class CoreAlbumWork {
      * 排序
      */
     public sort: number
+
+    /**
+     * 判断付费状态, 需要付费吗?
+     * @param {number} isFree
+     * @return 付费 true; 免费 false;
+     */
+    public static checkIsFree(isFree: number) {
+        return isFree === 0
+    }
 
 }

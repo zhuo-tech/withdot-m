@@ -86,7 +86,8 @@ export async function purchasedAlbumListApi(id: string) {
  */
 export async function determineWhetherToPay(userId: string, goodsId: string): Promise<Boolean> {
     const priceRes: CoreAlbum = await getAlbumDetailApi(goodsId)
-    if (!priceRes.sellingPrice || priceRes.sellingPrice === '0' || priceRes.sellingPrice === undefined) {
+    // 免费专辑
+    if (!priceRes.sellingPrice || priceRes.sellingPrice === '0') {
         return true
     }
     const res = await DB.collection(PayGoodsOrder.TABLE_NAME)
@@ -99,6 +100,7 @@ export async function determineWhetherToPay(userId: string, goodsId: string): Pr
     if (!res.ok) {
         throw new Error(res.error)
     }
+    // 已购买?
     return res.total >= 1
 }
 
