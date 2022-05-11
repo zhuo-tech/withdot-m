@@ -59,7 +59,7 @@ export function videoService(videoId: string, props: PropsType) {
     // 监听作品_id变化切换视频数据
     watch(() => props.workId, () => videoDataInit(props.workId as string, props.albumId as string))
 
-    const debounceHisVodApi = throttle(hisVodApi, 2000)
+    const debounceHisVodApi = throttle(hisVodApi, 1000)
 
     return {
         videoButton,
