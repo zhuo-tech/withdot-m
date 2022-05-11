@@ -1,13 +1,21 @@
 <template>
   <view class="box">
-    <view v-if="!albumWork || albumWork.length ===0 " class="nodata">该专辑还未添加作品</view>
+    <view v-if="!albumWork || albumWork.length === 0 " class="nodata">该专辑还未添加作品</view>
     <view v-else>
-      <VideoPlay :albumId="albumId" :workId="workId"></VideoPlay>
+      <VideoPlay :albumId="albumId" :watchHistory="watchHistory" :workId="workId"></VideoPlay>
       <view class="course">
         <view class="title">课程目录</view>
-        <view v-for="(item,index) in albumWork" :key="index" class="content" @click="playVideo(item._id)">
-          <view>
+        <view v-for="(item,index) in albumWork" :key="index" class="content" @click="playVideo(item._id,item.watchHistory,index)">
+          <view class="workItem">
             <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
+            <view v-if="currentVideo === index" class="nowPlay">
+              <img alt="" src="../../static/album/now.png">
+              正在播放
+            </view>
+            <view v-else>
+              <view v-if="!item.watchHistory">暂未观看</view>
+              <view v-else>上次观看至 {{ item.watchHistory.toFixed(0) }} 秒</view>
+            </view>
             <!--<view class="size">时长-->
             <!--  <span>30:01</span>-->
             <!--</view>-->
@@ -22,7 +30,14 @@
 import VideoPlay from './components/video/VideoPlay.vue'
 import { albumService } from '@/pages/album/hooks/albumService'
 
-const {workId, albumWork, playVideo, albumId} = albumService()
+const {
+  workId,
+  albumWork,
+  playVideo,
+  albumId,
+  watchHistory,
+  currentVideo,
+} = albumService()
 
 </script>
 
@@ -67,6 +82,19 @@ const {workId, albumWork, playVideo, albumId} = albumService()
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.workItem {
+  display: flex;
+  justify-content: space-between;
+
+  .nowPlay {
+    color: #0d79ff;
+  }
+
+  > view:nth-of-type(2) {
+    margin-right: 80rpx;
+  }
 }
 
 </style>

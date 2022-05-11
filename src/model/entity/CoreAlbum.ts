@@ -54,7 +54,7 @@ export class CoreAlbumWork {
     /**
      * @see CoreAlbum._id
      */
-    public workId: string
+    public _id: string
 
     /**
      * 别名
@@ -80,6 +80,8 @@ export class CoreAlbumWork {
      * 排序
      */
     public sort: number
+
+    public watchHistory: number
 
     /**
      * 判断付费状态, 需要付费吗?

@@ -42,8 +42,7 @@ export function getUserInfo() {
  */
 export async function judgmentLoginPay(goodsId: string) {
     if (getToken()) {
-        const {_id} = getUserInfo()
-        const whetherPay = await determineWhetherToPay(_id, goodsId)
+        const whetherPay = await determineWhetherToPay(goodsId)
         if (whetherPay) {
             uni.navigateTo({url: `/pages/album/index?albumId=${ goodsId }`})
             return

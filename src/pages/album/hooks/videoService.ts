@@ -3,7 +3,6 @@ import { determineWhetherToPay } from '@/api/order/orderApi'
 import { CoreAlbumWork } from '@/model/entity/CoreAlbum'
 import { CoreDot } from '@/model/entity/CoreDot'
 import { throttle } from '@/utils/throttle'
-import { getUserInfo } from '@/utils/token'
 import { Dialog, Notify } from 'vant'
 import { ExtractPropTypes, ref, watch } from 'vue'
 
@@ -38,13 +37,13 @@ export function videoService(videoId: string, props: PropsType) {
     }
 
     // 初始化: 判断是否试看: 已购买 / 免费专辑, 无需试看
-    determineWhetherToPay(getUserInfo()._id, props.albumId)
+    determineWhetherToPay(props.albumId)
         .then(noChargeOrBought => isTry.value = !noChargeOrBought)
 
     // 获得视频数据
     const videoDataInit = (workId: string, albumId: string) => {
         getVideoData(workId, albumId)
-            .then(res => {
+            .then(async res => {
                 videoData.value = res
                 dotDate.value = res.dotData
                 // 初始化打点状态 未展示: alreadyShow
@@ -52,6 +51,7 @@ export function videoService(videoId: string, props: PropsType) {
 
                 // 如果视频URL不存在, 禁用 video 控制按钮
                 videoButton.value = !!videoData.value.materialData.href
+
             }).catch((err: any) => {
             Notify({type: 'danger', message: err.toString()})
         })
@@ -60,9 +60,6 @@ export function videoService(videoId: string, props: PropsType) {
     watch(() => props.workId, () => videoDataInit(props.workId as string, props.albumId as string))
 
     const debounceHisVodApi = throttle(hisVodApi, 2000)
-    const hisVod = (currentTime: number, albumId: string, workId: string) => {
-        debounceHisVodApi(currentTime, albumId, workId)
-    }
 
     return {
         videoButton,
@@ -100,7 +97,9 @@ export function videoService(videoId: string, props: PropsType) {
                     popUp(props.albumId)
                 }
             }
-            hisVod(currentTime, props.albumId, props.workId)
+
+            //视频添加更新观看时长记录
+            debounceHisVodApi(props.albumId, props.workId, currentTime)
         },
     }
 }

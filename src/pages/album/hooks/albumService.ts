@@ -8,10 +8,16 @@ export function albumService() {
     const albumDetail = ref<CoreAlbum>({} as CoreAlbum)
     const albumWork = computed(() => albumDetail.value.workList)
     const albumId = computed(() => albumDetail.value._id)
-
     const workId = ref('')
+    const watchHistory = ref()
+    const currentVideo = ref<null | number>()
 
-    const playVideo = (id: string) => workId.value = id
+    const playVideo = (id: string, history: number, index: number) => {
+        workId.value = id
+        watchHistory.value = history
+        currentVideo.value = index
+        getAlbumDetail(albumDetail.value._id)
+    }
 
     const getAlbumDetail = (_id: string) => {
         getAlbumDetailApi(_id).then(res => {
@@ -29,7 +35,7 @@ export function albumService() {
         uni.navigateTo({url: `/pages/album/index?albumId=${ albumId }`})
     }
 
-    onLoad((options) => getAlbumDetail(options.albumId as any))
+    onLoad((options) => getAlbumDetail(options.albumId as string))
     return {
         albumWork,
         workId,
@@ -38,5 +44,7 @@ export function albumService() {
         toPay,
         albumId,
         toAlbum,
+        watchHistory,
+        currentVideo,
     }
 }
