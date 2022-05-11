@@ -168,6 +168,8 @@ const {albumDetail, albumWork, toPay, toAlbum} = albumService()
   align-items: center;
   justify-content: space-around;
   box-shadow: 0px -2px 4px rgba(238, 238, 238, 1);
+  background-color: #FFFFFF;
+  z-index: 10;
 
   > view {
     width: 320rpx;
