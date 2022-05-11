@@ -94,6 +94,9 @@ export function videoService(videoId: string, props: PropsType) {
                 const needPay = CoreAlbumWork.checkIsFree(videoData.value.isFree)
                 if (needPay && currentTime >= videoData.value.trialTime) {
                     videoStop()
+                    //退出全屏模式
+                    videoContext.exitFullScreen()
+                    //弹框
                     popUp(props.albumId)
                 }
             }
