@@ -34,7 +34,7 @@ page {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-family: PingFang SC Bold;
+  font-family: PingFang SC;
   font-weight: Bold;
   padding: 30rpx;
   border-radius: 16rpx;
