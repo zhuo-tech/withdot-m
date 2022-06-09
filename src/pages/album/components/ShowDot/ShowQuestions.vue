@@ -2,7 +2,6 @@
 import { examLogApi } from '@/api/album/examLog'
 import { CoreDot } from '@/model/entity/CoreDot'
 import { CoreExam } from '@/model/entity/CoreExam'
-import { CoreQuestionRepo } from '@/model/entity/CoreQuestionRepo'
 import { AnswerLog } from '@/model/entity/CoreStudentExamLog'
 import { Notify } from 'vant'
 import { reactive, ref } from 'vue'
@@ -108,6 +107,8 @@ const countdown = (time: number) => {
     if (countdownTime.value === 0) {
       clearInterval(timer)
       submit()
+    } else if (countdownTime.value < 0) {
+      clearInterval(timer)
     }
   }, 1000)
 }
@@ -126,7 +127,6 @@ const submit = () => {
     }
     answer.push(question)
   })
-  console.log('答题数据', props.data.config.exam)
   answer?.forEach((item: any, index: number) => {
     switch (item.type) {
       case QuestionTypeEnum.TIANKONG:
@@ -142,11 +142,13 @@ const submit = () => {
     }
 
   })
+  const {switch: stopTime} = props.data.config
+  stopTime ? countdown(0) : null
   studentExamLog()
   finishBox.value = true
 }
 
-const studentExamLog = () => {
+const studentExamLog = async () => {
   const data = props.data.config.exam
   let answerLogs: AnswerLog[] = data.map((item: CoreExam, index: number) => {
     const newData: any = {}
@@ -155,18 +157,12 @@ const studentExamLog = () => {
     newData.quType = item.type as QuestionTypeEnum
     if (item.type === QuestionTypeEnum.XUANZE) {
       const list = item.content as any[]
-      newData.options = list.map(i => {
-        return i.answer
-      })
-      newData.originAnswer = list.map(i => {
-        return i.value
-      })
+      newData.options = list.map(i => i.answer)
+      newData.originAnswer = list.map(i => i.value)
     }
     if (item.type === QuestionTypeEnum.TIANKONG) {
       const list = item.content as any[]
-      newData.originAnswer = list.map(i => {
-        return i.answer
-      })
+      newData.originAnswer = list.map(i => i.answer)
     }
     if (item.type === QuestionTypeEnum.SAQ) {
       newData.currentAnswer = form[index].currentAnswer
@@ -177,7 +173,7 @@ const studentExamLog = () => {
     return newData
   })
 
-  examLogApi(props.data._id, props.data.workId, answerLogs).then().catch(err => {
+  await examLogApi(props.data._id, props.data.workId, answerLogs).then().catch(err => {
     Notify(err.toString())
   })
 }
@@ -240,7 +236,10 @@ const form = reactive(formData)
 
   <view :class="visible? 'box showBox':'box closeBox'" :name="$attrs" @click.stop="()=>{}">
     <van-form ref="formRef" :model="form" label-width="40px">
-      <view v-for="(item,index) in data.config.exam" v-show="currentQuestion === index" :key="index" style="min-height: 30vh">
+      <view v-for="(item,index) in data.config.exam"
+            v-show="currentQuestion === index"
+            :key="index"
+            style="min-height: 30vh">
 
         <!--考试弹框头部 倒计时-->
         <view class="top">
