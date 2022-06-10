@@ -17,7 +17,7 @@
             </view>
             <view v-else>
               <view v-if="!item.watchHistory">暂未观看</view>
-              <view v-else>上次观看至 {{ item.watchHistory.toFixed(0) }} 秒</view>
+              <view v-else>上次观看至 {{ filterWatchHisTory(Number(item.watchHistory.toFixed(0))) }}</view>
             </view>
             <!--<view class="size">时长-->
             <!--  <span>30:01</span>-->
@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import VideoPlay from './components/video/VideoPlay.vue'
 import { albumService } from '@/pages/album/hooks/albumService'
+import { filterWatchHisTory } from '@/utils/day'
 
 const {
   workId,

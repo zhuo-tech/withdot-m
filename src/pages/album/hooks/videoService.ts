@@ -6,7 +6,7 @@ import { throttle } from '@/utils/throttle'
 import { Dialog, Notify } from 'vant'
 import { ExtractPropTypes, ref, watch } from 'vue'
 
-type PropsType = Readonly<ExtractPropTypes<{ workId: { type: StringConstructor, required: true }, albumId: { type: StringConstructor, required: true } }>>
+type PropsType = Readonly<ExtractPropTypes<{ workId: { type: StringConstructor, required: true }, albumId: { type: StringConstructor, required: true }, watchHistory: { type: NumberConstructor, required: true } }>>
 
 export function videoService(videoId: string, props: PropsType) {
     // 视频实例
@@ -84,7 +84,10 @@ export function videoService(videoId: string, props: PropsType) {
          * 视频播放回调
          */
         videoTimeUpdate(event: any) {
-            const {currentTime} = event.detail
+            let {currentTime} = event.detail
+            if (props.watchHistory !== 0 && currentTime === 0) {
+                currentTime = props.watchHistory
+            }
 
             // 视频播放时时间变化 并过滤出 该时间的打点数据
             currentDot.value = dotDate.value?.filter(
