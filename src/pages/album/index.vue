@@ -1,11 +1,14 @@
 <template>
   <view class="box">
-    <view v-if="!albumWork || albumWork.length === 0 " class="nodata">该专辑还未添加作品</view>
-    <view v-else>
+    <!--<view v-if="!albumWork || albumWork.length === 0 " class="nodata">该专辑还未添加作品</view>-->
+    <view>
       <VideoPlay :albumId="albumId" :watchHistory="watchHistory" :workId="workId"></VideoPlay>
       <view class="course">
         <view class="title">课程目录</view>
-        <view v-for="(item,index) in albumWork" :key="index" class="content" @click="playVideo(item._id,item.watchHistory,index)">
+        <view v-for="(item,index) in albumWork"
+              :key="index"
+              class="content"
+              @click="playVideo(item._id,item.watchHistory,index)">
           <view class="workItem">
             <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
             <view v-if="currentVideo === index" class="nowPlay">

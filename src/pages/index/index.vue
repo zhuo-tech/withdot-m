@@ -9,7 +9,10 @@
       <image mode="aspectFill" src="../../static/树.png"></image>
     </view>
     <view class="content">
-      <view v-for="(item,index) in albumList" :key="index" class="album" @click="toAlbum(item._id)">
+      <view v-for="(item,index) in albumList"
+            :key="index"
+            class="album"
+            @click="toAlbum(item._id,item.workList && item.workList.length >0)">
         <image :src="videoAddress(item.coverHref)" class="cover" lazy-load="true" mode="aspectFill"></image>
         <view class="name">{{ item.title }}</view>
         <!--<view class="author">理光</view>-->

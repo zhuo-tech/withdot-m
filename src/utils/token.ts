@@ -1,5 +1,5 @@
 import { determineWhetherToPay } from '@/api/order/orderApi'
-import { Dialog } from 'vant'
+import { Dialog, Notify } from 'vant'
 
 export function setToken(token: any) {
     uni.setStorageSync('token', token)
@@ -38,10 +38,15 @@ export function getUserInfo() {
 /**
  * 判断用户是否登录,登录后专辑是否购买
  * @param {string} goodsId 专辑id
+ * @param isThereAWork 专辑是否含有作品 true: 含有 false: 不含有
  * @returns {Promise<void>}
  */
-export async function judgmentLoginPay(goodsId: string) {
+export async function judgmentLoginPay(goodsId: string, isThereAWork: Boolean) {
     if (getToken()) {
+        if (!isThereAWork) {
+            Notify({type: 'primary', message: '该专辑还未添加作品'})
+            return
+        }
         const whetherPay = await determineWhetherToPay(goodsId)
         if (whetherPay) {
             uni.navigateTo({url: `/pages/album/index?albumId=${ goodsId }`})

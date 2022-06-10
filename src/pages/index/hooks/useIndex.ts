@@ -10,7 +10,7 @@ type ReturnType = {
     searchWord: Ref<string>
     albumList: Ref<Array<CoreAlbum>>
     getAlbumList(): void
-    toAlbum(id: string): void
+    toAlbum(id: string, isThereAWork: Boolean): void
     getSearchAlbumList(): void
 }
 
@@ -35,9 +35,13 @@ export function useIndex(): ReturnType {
                 console.log(albumList, '主页专辑列表数据')
             }).catch(err => Notify({type: 'danger', message: err.toString()}))
     }
-
-    const toAlbum = async (goodsId: string) => {
-        await judgmentLoginPay(goodsId)
+    /**
+     * 跳转至专辑详情页,判断是否登录 是否支付 是否含有作品
+     * @param {string} goodsId 专辑Id
+     * @param {number} isThereAWork 专辑是否含有作品 true: 含有 false: 不含有
+     */
+    const toAlbum = async (goodsId: string, isThereAWork: Boolean) => {
+        await judgmentLoginPay(goodsId, isThereAWork)
     }
 
     // 触底加载
@@ -57,7 +61,6 @@ export function useIndex(): ReturnType {
         getAlbumList,
         toAlbum,
         getSearchAlbumList() {
-            console.log(arguments, 'getSearchAlbumList')
             albumList.value = []
             pages.value.current = 1
             getAlbumListApi(pages.value, searchWord.value)
