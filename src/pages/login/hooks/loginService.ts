@@ -1,4 +1,5 @@
 import { mobileSendCode, smsLogin } from '@/api/login/loginApi'
+import { setToken, setUserInfo } from '@/utils/token'
 import { Notify } from 'vant'
 import { ref } from 'vue'
 
@@ -52,7 +53,13 @@ export function loginService() {
             Notify('请输入验证码')
             return
         }
-        smsLogin(form.value.phone, form.value.code).then(() => {
+        smsLogin(form.value.phone, form.value.code).then((response) => {
+            if (response.code !== 0) {
+                Notify(response.error)
+                return
+            }
+            setUserInfo(response.data.user)
+            setToken(response.data.access_token)
             uni.navigateBack({delta: 1})
         }).catch(err => {
             Notify(err.toString())

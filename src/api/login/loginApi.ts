@@ -14,13 +14,5 @@ export async function mobileSendCode(mobile: any) {
 }
 
 export async function smsLogin(username: any, code: any) {
-    return await cloud.invokeFunction('app-quick-login', {username, code}).then(response => {
-        if (response.code !== 0) {
-            return
-        }
-        setUserInfo(response.data.user)
-        setToken(response.data.access_token)
-    }).catch(err => {
-        Notify(err.toString())
-    })
+    return await cloud.invokeFunction('app-quick-login', {username, code})
 }
