@@ -4,7 +4,6 @@ import { CoreAlbum } from '@/model/entity/CoreAlbum'
 import { PayGoodsOrder } from '@/model/entity/PayGoodsOrder'
 import { LogicDelete } from '@/model/LogicDelete'
 import { getUserInfo } from '@/utils/token'
-import { Notify } from 'vant'
 
 export async function getOrderListApi(id: string) {
     const res = await DB.collection(PayGoodsOrder.TABLE_NAME)
@@ -84,7 +83,7 @@ export async function purchasedAlbumListApi(id: string) {
  * @param {string} goodsId 专辑id
  * @returns {Promise<boolean>}
  */
-export async function determineWhetherToPay(goodsId: string): Promise<Boolean> {
+export async function determineWhetherToPay(goodsId: string) {
     const priceRes: CoreAlbum = await getAlbumDetailApi(goodsId)
     // 免费专辑
     if (!priceRes.sellingPrice || priceRes.sellingPrice === '0') {
@@ -101,7 +100,7 @@ export async function determineWhetherToPay(goodsId: string): Promise<Boolean> {
         throw new Error(res.error)
     }
     // 已购买?
-    return res.total >= 1
+    return res.total > 0
 }
 
 export async function payApi(goodsName: string, totalFee: number, tradeType: string, goodsId: string) {

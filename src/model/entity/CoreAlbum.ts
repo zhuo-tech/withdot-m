@@ -68,7 +68,7 @@ export class CoreAlbumWork {
      * 0 收费
      * 1 免费
      */
-    public isFree: number
+    public isPay: number
 
     /**
      * 试看时长
@@ -85,11 +85,11 @@ export class CoreAlbumWork {
 
     /**
      * 判断付费状态, 需要付费吗?
-     * @param {number} isFree
      * @return 付费 true; 免费 false;
+     * @param isPay
      */
-    public static checkIsFree(isFree: number) {
-        return isFree === 0
+    public static checkIsFree(isPay: number) {
+        return isPay === 0
     }
 
 }

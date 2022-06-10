@@ -9,7 +9,7 @@ import { getUserInfo } from '@/utils/token'
 const DB = cloud.database()
 
 export type VideoDataType = CoreWork
-    & Pick<CoreAlbumWork, 'isFree' | 'trialTime'>
+    & Pick<CoreAlbumWork, 'isPay' | 'trialTime'>
     & {
     materialData: CoreMaterial,
     dotData: Array<CoreDot>

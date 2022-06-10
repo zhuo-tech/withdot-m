@@ -22,8 +22,8 @@ export function videoService(videoId: string, props: PropsType) {
     let dotDate = ref<CoreDot[]>([])
     // 当前打点数据
     const currentDot = ref<CoreDot[]>([])
-    // 是否试看
-    const isTry = ref(true)
+    // 是否试看 false 未购买试看
+    const isTry = ref<Boolean>(true)
 
     // 视频停止播放
     const videoStop = () => {
@@ -38,7 +38,7 @@ export function videoService(videoId: string, props: PropsType) {
 
     // 初始化: 判断是否试看: 已购买 / 免费专辑, 无需试看
     determineWhetherToPay(props.albumId)
-        .then(noChargeOrBought => isTry.value = !noChargeOrBought)
+        .then(noChargeOrBought => isTry.value = noChargeOrBought)
 
     // 获得视频数据
     const videoDataInit = (workId: string, albumId: string) => {
@@ -93,8 +93,10 @@ export function videoService(videoId: string, props: PropsType) {
             currentDot.value = dotDate.value?.filter(
                 ({start, end, alreadyShow}) => currentTime >= start && currentTime <= (end ?? start) && !alreadyShow,
             )
-            if (isTry.value) {
-                const needPay = CoreAlbumWork.checkIsFree(videoData.value.isFree)
+            determineWhetherToPay(props.albumId)
+                .then(noChargeOrBought => isTry.value = noChargeOrBought)
+            if (!isTry.value) {
+                const needPay = CoreAlbumWork.checkIsFree(videoData.value.isPay)
                 if (needPay && currentTime >= videoData.value.trialTime) {
                     videoStop()
                     //退出全屏模式
