@@ -3,7 +3,7 @@
   "version": "1.0",
   "scripts": {
     "deploy:dev": "uni build --mode development --outDir dist/dev/h5 && rsync -rvtP ./dist/dev/h5/  zhuo-dev:/path/to/webroot",
-    "deploy:win": "scp -r ./dist/build/h5/*  zhuo-dev@dev.zhuo-zhuo.com:/app/withdot/app",
+    "deploy:win": "scp -r ./dist/build/*  zhuo-dev@dev.zhuo-zhuo.com:/app/withdot/app",
     "deploy:prod": "rsync -rvtP ./dist/build/h5/  zhuo-prod:/path/to/webroot",
     "dev": "npm run dev:h5",
     "start": "npm run serve",
