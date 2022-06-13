@@ -1,23 +1,10 @@
 {
 	"pages": [
 		{
-			"path": "pages/index/index",
-			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
-			}
+			"path": "pages/index/index"
 		},
 		{
-			"path": "pages/my/index",
-			"style": {
-				"navigationBarTitleText": "我的",
-				"navigationBarBackgroundColor": "#0D79FF",
-				"navigationBarTextStyle": "#FFFFFF",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
+			"path": "pages/my/index"
 		},
 		{
 			"path": "pages/album/index",
@@ -46,7 +33,7 @@
 		{
 			"path": "pages/login/index",
 			"style": {
-				"navigationBarTitleText": "登录页",
+				"navigationBarTitleText": "登录",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -66,10 +53,11 @@
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "微草轻课",
 		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"navigationBarTextStyle": "white",
+		"navigationStyle": "custom"
 	},
 	"tabBar": {
 		"color": "#666666",
