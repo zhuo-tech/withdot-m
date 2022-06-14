@@ -59,6 +59,10 @@ export function videoService(videoId: string, props: PropsType) {
     // 监听作品_id变化切换视频数据
     watch(() => props.workId, () => videoDataInit(props.workId as string, props.albumId as string))
 
+    /**
+     * 节流(更新观看时长)
+     * @type {Function}
+     */
     const debounceHisVodApi = throttle(hisVodApi, 1000)
 
     return {
@@ -95,9 +99,13 @@ export function videoService(videoId: string, props: PropsType) {
             )
             determineWhetherToPay(props.albumId)
                 .then(noChargeOrBought => isTry.value = noChargeOrBought)
+            //判断是否是试看
             if (!isTry.value) {
+                //判断作品是否收费 付费返回true
                 const needPay = CoreAlbumWork.checkIsFree(videoData.value.isPay)
+                //作品是是付费 trialTime 试看时间
                 if (needPay && currentTime >= videoData.value.trialTime) {
+                    //视频停止播放
                     videoStop()
                     //退出全屏模式
                     videoContext.exitFullScreen()
@@ -106,12 +114,16 @@ export function videoService(videoId: string, props: PropsType) {
                 }
             }
 
-            //视频添加更新观看时长记录
+            //视频更新观看时长记录
             debounceHisVodApi(props.albumId, props.workId, currentTime)
         },
     }
 }
 
+/**
+ * 付费提示弹框
+ * @param {string} albumId
+ */
 function popUp(albumId: string) {
     Dialog.confirm({
             title: '付费作品',

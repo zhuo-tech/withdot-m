@@ -8,8 +8,8 @@ const {orderList, toDetail} = orderFormService()
 
 <template>
   <view class="box">
-
-    <view v-for="(item,index) in orderList" :key="index" class="item" @click="toDetail(item._id)">
+    <view v-if="orderList && orderList.length <= 0" class="noData">您还没有购买专辑</view>
+    <view v-else v-for="(item,index) in orderList" :key="index" class="item" @click="toDetail(item._id)">
       <view>
         <image :src="videoAddress(item.album.coverHref)" mode="aspectFill"></image>
       </view>
@@ -69,5 +69,12 @@ page {
     font-size: 28rpx;
     color: rgba(102, 102, 102, 1);
   }
+}
+
+.noData {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

@@ -36,14 +36,17 @@ import Dot from '../Dot'
 
 //传来的作品_id
 const props = defineProps({
+  //作品id
   workId: {
     type: String,
     required: true,
   },
+  //专辑id
   albumId: {
     type: String,
     required: true,
   },
+  //观看历史
   watchHistory: {
     type: Number,
     required: true,
