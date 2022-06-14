@@ -1,28 +1,25 @@
 <template>
   <view class="box">
-    <!--<view v-if="!albumWork || albumWork.length === 0 " class="nodata">该专辑还未添加作品</view>-->
-    <view>
-      <VideoPlay :albumId="albumId" :watchHistory="watchHistory" :workId="workId"></VideoPlay>
-      <view class="course">
-        <view class="title">课程目录</view>
-        <view v-for="(item,index) in albumWork"
-              :key="index"
-              class="content"
-              @click="playVideo(item._id,item.watchHistory,index)">
-          <view class="workItem">
-            <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
-            <view v-if="currentVideo === index" class="nowPlay">
-              <img alt="" src="../../static/album/now.png">
-              正在播放
-            </view>
-            <view v-else>
-              <view v-if="!item.watchHistory">暂未观看</view>
-              <view v-else>上次观看至 {{ filterWatchHisTory(Number(item.watchHistory.toFixed(0))) }}</view>
-            </view>
-            <!--<view class="size">时长-->
-            <!--  <span>30:01</span>-->
-            <!--</view>-->
+    <VideoPlay :albumId="albumId" :watchHistory="watchHistory" :workId="workId" class="videoPlay"></VideoPlay>
+    <view class="course">
+      <view class="title">课程目录</view>
+      <view v-for="(item,index) in albumWork"
+            :key="index"
+            class="content"
+            @click="playVideo(item._id,item.watchHistory,index)">
+        <view class="workItem">
+          <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
+          <view v-if="currentVideo === index" class="nowPlay">
+            <img alt="" src="../../static/album/now.png">
+            正在播放
           </view>
+          <view v-else>
+            <view v-if="!item.watchHistory">暂未观看</view>
+            <view v-else>上次观看至 {{ filterWatchHisTory(Number(item.watchHistory.toFixed(0))) }}</view>
+          </view>
+          <!--<view class="size">时长-->
+          <!--  <span>30:01</span>-->
+          <!--</view>-->
         </view>
       </view>
     </view>
@@ -46,17 +43,25 @@ const {
 </script>
 
 <style lang="less" scoped>
+
 .box {
   position: relative;
 
+  .videoPlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 410rpx;
+    width: 100%;
+  }
+
   .course {
-    position: absolute;
-    top: 410rpx;
-    width: 750rpx;
-    padding: 18rpx 40rpx;
+    width: 100%;
+    margin-top: 420rpx;
     border-bottom: 2rpx solid rgba(250, 250, 250, 1);
 
     .title {
+      margin-left: 20rpx;
       font-size: 32rpx;
       font-weight: Bold;
       color: rgba(51, 51, 51, 1);
@@ -89,6 +94,7 @@ const {
 }
 
 .workItem {
+  padding: 20rpx 40rpx;
   display: flex;
   justify-content: space-between;
 

@@ -11,11 +11,15 @@
            autoplay
            @fullscreenchange="videoFullScreen"
            @timeupdate="videoTimeUpdate">
-      <cover-view>
+      <cover-view class="coverView">
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
           <view v-for="(item,index) in currentDot" :key="index">
             <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
-              <Dot :data="item" :videoScreen="videoScreen" @addParameters="addParameters" @videoPlay="videoPlay" @videoStop="videoStop" />
+              <Dot :data="item"
+                   :videoScreen="videoScreen"
+                   @addParameters="addParameters"
+                   @videoPlay="videoPlay"
+                   @videoStop="videoStop" />
             </teleport>
           </view>
         </view>
