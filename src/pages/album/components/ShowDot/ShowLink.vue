@@ -22,9 +22,14 @@ dotCogig(props.data, emits)
 </script>
 
 <template>
-  <view :href="data.config.url" :style="style" target="_blank" @click="toUrl">{{ data.config.url }}</view>
+  <cover-view :href="data.config.url" :style="style" target="_blank" @click="toUrl">{{ data.config.url }}</cover-view>
 </template>
 
-<style scoped>
-
+<style lang="less" scoped>
+cover-view {
+  position: absolute;
+  padding: 5rpx 80rpx 5rpx 10rpx;
+  border-radius: 3px;
+  font-size: 24rpx;
+}
 </style>

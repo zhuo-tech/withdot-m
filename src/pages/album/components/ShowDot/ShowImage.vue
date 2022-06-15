@@ -24,7 +24,7 @@ dotCogig(props.data, emits)
 </script>
 
 <template>
-  <img :src="videoAddress(data.config.url)" :style="style" alt="预览" class="show-image">
+  <cover-image :src="videoAddress(data.config.url)" :style="style" alt="预览" class="show-image" />
 </template>
 
 <style lang="less" scoped>

@@ -11,7 +11,7 @@
            autoplay
            @fullscreenchange="videoFullScreen"
            @timeupdate="videoTimeUpdate">
-      <cover-view class="coverView">
+      <cover-view :class="videoScreen? 'coverView':''">
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
           <view v-for="(item,index) in currentDot" :key="index">
             <teleport :disabled="videoScreen || item.type !== CoreDotType.题目" to="#app">
@@ -68,9 +68,8 @@ const {
 /**
  * 当视频进入和退出全屏时触发
  */
-const videoFullScreen = () => {
-  screen.orientation.lock('landscape')
-  videoScreen.value = !videoScreen.value
+const videoFullScreen = (event: any) => {
+  videoScreen.value = event.detail.fullScreen
 }
 
 </script>
@@ -95,16 +94,19 @@ const videoFullScreen = () => {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1;
     color: red;
   }
 }
 
 .coverFull {
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
 }
 
 .coverNoFull {
   height: 410rpx;
 }
+
 </style>

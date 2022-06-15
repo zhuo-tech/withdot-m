@@ -27,14 +27,15 @@ dotCogig(props.data, emits)
 </script>
 
 <template>
-  <div :style="style" v-html="showText"></div>
+  <cover-view :style="style" v-html="showText"></cover-view>
 </template>
 
 <style lang="less" scoped>
-div {
-  //background-color: rgba(255, 255, 255, .2);
-  backdrop-filter: blur(10px);
-  padding: 5px 10px;
+cover-view {
+  position: absolute;
+  //backdrop-filter: blur(10px);
+  padding: 5rpx 80rpx 5rpx 10rpx;
   border-radius: 3px;
+  font-size: 24rpx;
 }
 </style>
