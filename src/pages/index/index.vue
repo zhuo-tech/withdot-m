@@ -27,7 +27,7 @@ import { useIndex } from '@/pages/index/hooks/useIndex'
 import { videoAddress } from '@/utils/video'
 import { debounce } from '@/utils/debounce'
 
-const {albumList, getAlbumList, toAlbum, noMore, searchWord, getSearchAlbumList, getViewers} = useIndex()
+const {albumList, getAlbumList, toAlbum, noMore, searchWord, getSearchAlbumList} = useIndex()
 
 const search = debounce(getSearchAlbumList, 500)
 
