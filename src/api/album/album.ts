@@ -22,6 +22,7 @@ export async function getAlbumDetailApi(_id: string): Promise<CoreAlbum> {
     res.data.workList = await Promise.all(res.data.workList.map(async (it: CoreAlbumWork) => {
         return {
             ...it,
+            viewers: await getWorkViewers(res.data._id, it._id),
             watchHistory: await getUserWatchHistory(res.data._id, it._id as string),
         }
     }))
@@ -53,4 +54,14 @@ async function getUserWatchHistory(albumId: string, workId: string) {
         throw new Error(res.error)
     }
     return res.data.createTime ?? 0
+}
+
+async function getWorkViewers(albumId: string, workId: string) {
+    const res = await DB.collection(HisVodRecord.TABLE_NAME)
+        .where({albumId, workId})
+        .get()
+    if (!res.ok) {
+        throw new Error(res.error)
+    }
+    return res.data?.length
 }

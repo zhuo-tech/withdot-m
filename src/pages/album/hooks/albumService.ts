@@ -21,6 +21,7 @@ export function albumService() {
 
     const getAlbumDetail = (_id: string) => {
         getAlbumDetailApi(_id).then(res => {
+            console.log('专辑详情', res)
             albumDetail.value = res
         }).catch(err => {
             Notify(err.toString())
