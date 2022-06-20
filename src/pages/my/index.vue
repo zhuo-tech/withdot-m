@@ -40,11 +40,12 @@ page {
 }
 
 .box {
+  width: 100%;
   background-color: #fcfdff;
 }
 
 .top {
-  padding: 68rpx 40rpx;
+  //padding: 68rpx 40rpx;
   width: 100%;
   height: 272rpx;
   background: linear-gradient(to top, #ffffff, #0D79FF);
@@ -52,6 +53,7 @@ page {
   align-items: center;
 
   > .avatar {
+    margin-left: 40rpx;
     width: 120rpx;
     height: 120rpx;
     border-radius: 50%;
