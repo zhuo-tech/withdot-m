@@ -1,6 +1,6 @@
 import { getAlbumListApi } from '@/api/home/index'
-import { CoreAlbum } from '@/model/entity/CoreAlbum'
-import { judgmentLoginPay, whetherToLogIn } from '@/utils/token'
+import { CoreAlbum, ViewerType } from '@/model/entity/CoreAlbum'
+import { judgmentLoginPay } from '@/utils/token'
 import { onReachBottom } from '@dcloudio/uni-app'
 import { Notify } from 'vant'
 import { Ref, ref } from 'vue'
@@ -30,9 +30,18 @@ export function useIndex(): ReturnType {
     const getAlbumList = () => {
         getAlbumListApi(pages.value, searchWord.value)
             .then(({list, total}) => {
+                list.forEach((it) => {
+                    //专辑的浏览学习人数
+                    let newArr: ViewerType[]
+                    newArr = it.viewers?.filter((item, index, origin) =>
+                            index === origin.findIndex((itemInner) => {
+                                return itemInner.userId === item.userId
+                            }),
+                    )
+                    it['viewer'] = newArr?.length ?? 0
+                })
                 pages.value.total = total
                 albumList.value.push(...list)
-                console.log(albumList, '主页专辑列表数据')
             }).catch(err => Notify({type: 'danger', message: err.toString()}))
     }
     /**

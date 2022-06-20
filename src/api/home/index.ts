@@ -1,5 +1,6 @@
 import { DB } from '@/config/cloud'
 import { CoreAlbum } from '@/model/entity/CoreAlbum'
+import { HisVodRecord } from '@/model/HisVodRecord'
 import { LogicDelete } from '@/model/LogicDelete'
 
 type PageType = {
@@ -34,6 +35,12 @@ export async function getAlbumListApi(pages: PageType, search: string): Promise<
 
     const albumRes = await DB.collection(CoreAlbum.TABLE_NAME)
         .where(whereFlag)
+        .with({
+            query: DB.collection(HisVodRecord.TABLE_NAME),
+            localField: '_id',
+            foreignField: 'albumId',
+            as: 'viewers',
+        })
         .page({
             current: pages.current,
             size: pages.size,
@@ -43,6 +50,7 @@ export async function getAlbumListApi(pages: PageType, search: string): Promise<
     if (!albumRes.ok) {
         throw new Error(albumRes.error)
     }
+
     return {
         list: albumRes.data,
         total: countRes.total,

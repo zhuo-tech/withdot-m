@@ -15,12 +15,7 @@
             @click="toAlbum(item._id,item.workList && item.workList.length >0)">
         <image :src="videoAddress(item.coverHref)" class="cover" lazy-load="true" mode="aspectFill"></image>
         <view class="name">{{ item.title }}</view>
-        <!--<view class="author">理光</view>-->
-        <!--<view class="tab">-->
-        <!--  <span>标签|</span>-->
-        <!--  <span>345人已学</span>-->
-        <!--  s-->
-        <!--</view>-->
+        <span class="viewer">{{ item.viewer }}人已学</span>
       </view>
     </view>
     <view v-show="noMore" class="noMore">没有更多啦!</view>
@@ -32,7 +27,7 @@ import { useIndex } from '@/pages/index/hooks/useIndex'
 import { videoAddress } from '@/utils/video'
 import { debounce } from '@/utils/debounce'
 
-const {albumList, getAlbumList, toAlbum, noMore, searchWord, getSearchAlbumList} = useIndex()
+const {albumList, getAlbumList, toAlbum, noMore, searchWord, getSearchAlbumList, getViewers} = useIndex()
 
 const search = debounce(getSearchAlbumList, 500)
 
@@ -93,6 +88,10 @@ getAlbumList()
       margin: 20rpx 0 0 0;
       font-size: 40rpx;
       text-align: center;
+    }
+
+    .viewer {
+      margin-bottom: 40rpx;
     }
 
     .author {

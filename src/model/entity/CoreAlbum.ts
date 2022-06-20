@@ -1,6 +1,5 @@
 import { BaseEntity } from '@/model/BaseEntity'
 import { FileInfo } from '@/model/FileInfo'
-import { CommonEnum } from '@/model/CommonEnum'
 
 /**
  * 专辑
@@ -44,7 +43,17 @@ export class CoreAlbum implements BaseEntity {
     public createTime: number
     public updateBy: string
     public updateTime: number
+    public viewers: ViewerType[]
 
+}
+
+//浏览人数
+export class ViewerType {
+    public _id: string
+    public albumId: string
+    public createTime: number
+    public userId: string
+    public workId: string
 }
 
 /**
