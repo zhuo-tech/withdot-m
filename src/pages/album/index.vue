@@ -73,7 +73,7 @@ const {
       padding: 22rpx 0 14rpx 0;
 
       .workItem {
-        padding: 20rpx 40rpx;
+        padding: 0 40rpx;
         display: flex;
         align-items: center;
         justify-content: space-between;
