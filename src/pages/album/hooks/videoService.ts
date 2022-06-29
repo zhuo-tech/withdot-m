@@ -1,4 +1,6 @@
-import { getVideoData, hisVodApi, VideoDataType } from '@/api/album/videoApi'
+// noinspection JSIgnoredPromiseFromCall
+
+import { finishPlayingApi, getVideoData, hisVodApi, VideoDataType } from '@/api/album/videoApi'
 import { determineWhetherToPay } from '@/api/order/orderApi'
 import { CoreAlbumWork } from '@/model/entity/CoreAlbum'
 import { CoreDot } from '@/model/entity/CoreDot'
@@ -117,6 +119,14 @@ export function videoService(videoId: string, props: PropsType) {
             //视频更新观看时长记录
             debounceHisVodApi(props.albumId, props.workId, currentTime)
         },
+
+        /**
+         * 作品看完调用函数 加标识
+         */
+        finishPlaying() {
+            finishPlayingApi(props.albumId, props.workId)
+        },
+
     }
 }
 

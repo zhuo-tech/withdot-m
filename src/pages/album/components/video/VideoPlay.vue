@@ -10,6 +10,7 @@
            :src="videoAddress(videoData.materialData?.href)"
            autoplay
            @fullscreenchange="videoFullScreen"
+           @ended="finishPlaying"
            @timeupdate="videoTimeUpdate">
       <cover-view :class="videoScreen? 'coverView':''">
         <view :class="videoScreen? 'coverFull cover':'coverNoFull cover'">
@@ -63,6 +64,7 @@ const {
   videoStop,
   videoPlay,
   videoTimeUpdate,
+  finishPlaying,
 } = videoService('myVideo', props)
 
 /**

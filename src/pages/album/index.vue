@@ -10,15 +10,19 @@
         <view class="workItem">
           <view class="workItemLeft">
             <view class="contentName">{{ `${ index + 1 }. ${ item.name }` }}</view>
-            <view class="viewer">{{ item.viewers }}人已学</view>
+            <view class="viewer">
+              <view>时长: {{ item.materialFile?.file.time }}秒</view>
+              <view>{{ item.viewers }}人已学</view>
+            </view>
           </view>
           <view v-if="currentVideo === index" class="nowPlay">
             <img alt="" src="../../static/album/now.png">
             正在播放
           </view>
           <view v-else>
-            <view v-if="!item.watchHistory">暂未观看</view>
-            <view v-else class="history">上次观看至 {{ filterWatchHisTory(Number(item.watchHistory.toFixed(0))) }}</view>
+            <view v-if="item?.workStatus === 0">已完成</view>
+            <view v-else-if="!item?.watchHistory">暂未观看</view>
+            <view v-else class="history">{{ getSchedule(item.materialFile?.file.time, item.watchHistory) }}</view>
           </view>
         </view>
       </view>
@@ -30,6 +34,7 @@
 import VideoPlay from './components/video/VideoPlay.vue'
 import { albumService } from '@/pages/album/hooks/albumService'
 import { filterWatchHisTory } from '@/utils/day'
+import { getSchedule } from '@/utils/day'
 
 const {
   workId,
@@ -85,9 +90,15 @@ const {
           justify-content: flex-start;
 
           .viewer {
+            display: flex;
+            align-items: center;
             color: rgba(153, 153, 153, 1);
             font-size: 24rpx;
             margin-top: 20rpx;
+
+            > view:nth-of-type(2) {
+              margin-left: 40rpx;
+            }
           }
 
           .contentName {
@@ -105,9 +116,9 @@ const {
           font-family: "Comic Sans MS";
         }
 
-        > view:nth-of-type(2) {
-          margin-right: 80rpx;
-        }
+        //> view:nth-of-type(2) {
+        //  margin-right: 80rpx;
+        //}
       }
 
 

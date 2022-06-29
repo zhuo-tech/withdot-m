@@ -19,17 +19,21 @@ export async function getAlbumDetailApi(_id: string): Promise<CoreAlbum> {
     if (!res.ok) {
         throw new Error(res.error)
     }
+
+    // @ts-ignore
     res.data.workList = await Promise.all(res.data.workList.map(async (it: CoreAlbumWork) => {
+        const watchHistory = await getUserWatchHistory(res.data._id, it._id as string)
         return {
             ...it,
             viewers: await getWorkViewers(res.data._id, it._id),
-            watchHistory: await getUserWatchHistory(res.data._id, it._id as string),
+            watchHistory: watchHistory?.createTime,
+            workStatus: watchHistory?.workStatus,
         }
     }))
     return res.data
 }
 
-async function getUserWatchHistory(albumId: string, workId: string) {
+async function getUserWatchHistory(albumId: string, workId: string): Promise<Partial<HisVodRecord> | undefined> {
     const countRes = await DB.collection(HisVodRecord.TABLE_NAME)
         .where({
             albumId,
@@ -41,7 +45,7 @@ async function getUserWatchHistory(albumId: string, workId: string) {
         throw new Error(countRes.error)
     }
     if (countRes.total === 0) {
-        return 0
+        return
     }
     const res = await DB.collection(HisVodRecord.TABLE_NAME)
         .where({
@@ -49,11 +53,14 @@ async function getUserWatchHistory(albumId: string, workId: string) {
             workId,
             userId: getUserInfo()._id,
         })
-        .getOne<HisVodRecord>()
+        .getOne<Partial<HisVodRecord>>()
     if (!res.ok) {
         throw new Error(res.error)
     }
-    return res.data.createTime ?? 0
+    return {
+        createTime: res.data.createTime ?? 0,
+        workStatus: res.data.workStatus ?? 1,
+    }
 }
 
 async function getWorkViewers(albumId: string, workId: string) {

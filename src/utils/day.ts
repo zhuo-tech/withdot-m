@@ -25,3 +25,8 @@ export function filterWatchHisTory(time: number): string {
     ss = (time - Number(hh) * 60 * 60 - Number(mm) * 60).toString()
     return `${ hh }:${ mm }:${ ss }`
 }
+
+export function getSchedule(workTime: number, watchTime: number) {
+    // @ts-ignore
+    return (Math.floor(watchTime) / workTime).toFixed(2) * 100 + '%'
+}

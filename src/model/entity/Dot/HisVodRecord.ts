@@ -29,4 +29,10 @@ export class HisVodRecord {
      */
     createTime: number
 
+    /**
+     * 是否看完
+     * @type 0 已看完
+     */
+    workStatus: number
+
 }

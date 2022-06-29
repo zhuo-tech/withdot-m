@@ -37,7 +37,7 @@ export class CoreAlbum implements BaseEntity {
      * 包含的作品, 作品额外信息
      * @type {Array<any>}
      */
-    public workList: Array<CoreAlbumWork>
+    public workList: Awaited<{ workStatus: number | undefined; viewers: number; isPay: number; trialTime: number; alias: string; watchHistory: number | undefined; _id: string; sort: number }>[]
 
     public createBy: string
     public createTime: number
